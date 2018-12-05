@@ -1,3 +1,10 @@
+provider "solace" {
+    host = "localhost:8080"
+    base_path = "/SEMP/v2/config"
+    user = "admin"
+    password = "alex"
+}
+
 resource "solace_msgvpn" "my-vpn" {
-    address = "11.22.33.44"
+    name = "go-tf-1"
 }
