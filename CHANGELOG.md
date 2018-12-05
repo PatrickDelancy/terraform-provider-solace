@@ -12,6 +12,6 @@ This is a problem when trying to update an attribute from a *non-empty* to an *e
 
 ### Added
 * Basic scaffolding for terraform provider
-* Very basic MSG VPN resource
+* Very basic MSG VPN resource with a few select attributes and create/destroy/update capability
 
 [Unreleased]: https://github.com/ExalDraen/terraform-provider-solace/compare/
