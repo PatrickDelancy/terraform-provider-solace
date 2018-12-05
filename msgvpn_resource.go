@@ -19,8 +19,26 @@ func resourceMsgVpn() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Description: "The name of the MSG VPN. Used as an identifier.",
+				Required:    true,
+			},
+			"enabled": &schema.Schema{
+				Type:        schema.TypeBool,
+				Description: "Whether or not the MSG VPN should be enabled.",
+				Optional:    true,
+				Default:     true,
+			},
+			"max_spool_usage": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum Message Spool usage by the Message VPN, in megabytes. The default value is 0.",
+				Optional:    true,
+			},
+			"replication_enabled": &schema.Schema{
+				Type:        schema.TypeBool,
+				Description: "Enable or disable the Replication feature for the Message VPN. The default value is false.",
+				Optional:    true,
+				Default:     false,
 			},
 		},
 	}
@@ -29,14 +47,24 @@ func resourceMsgVpn() *schema.Resource {
 func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 	log.Print("[DEBUG] Creating msg vpn ...")
 
+	// Get our Solace client
 	ca := m.(ClientAndAuth)
 	client := ca.Client
 	auth := ca.Auth
-	name := d.Get("name").(string)
 
-	// Prepare new VPN object
+	// Extract config data from resource data and prepare new VPN object
+	name := d.Get("name").(string)
+	newMsgVpn := models.MsgVpn{
+		MsgVpnName:         name,
+		Enabled:            d.Get("enabled").(bool),
+		ReplicationEnabled: d.Get("replication_enabled").(bool),
+	}
+	// Values that do not have defaults shouldn't be provided if not configured in Terraform
+	if v, ok := d.GetOk("max_spool_usage"); ok {
+		newMsgVpn.MaxMsgSpoolUsage = int64(v.(int))
+	}
+
 	params := msg_vpn.NewCreateMsgVpnParams()
-	newMsgVpn := models.MsgVpn{MsgVpnName: name}
 	params.Body = &newMsgVpn
 
 	log.Printf("[DEBUG] create msg vpn %q", name)
@@ -66,10 +94,41 @@ func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
 	}
 	fmt.Printf("%#v\n", resp.Payload.Data)
 	d.Set("name", resp.Payload.Data.MsgVpnName)
+	d.Set("enabled", resp.Payload.Data.Enabled)
+	d.Set("max_spool_usage", resp.Payload.Data.MaxMsgSpoolUsage)
+	d.Set("replication_enabled", resp.Payload.Data.ReplicationEnabled)
 	return nil
 }
 
 func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
+	ca := m.(ClientAndAuth)
+	client := ca.Client
+	auth := ca.Auth
+
+	params := msg_vpn.NewUpdateMsgVpnParams()
+	params.MsgVpnName = d.Id()
+	newMsgVpn := models.MsgVpn{}
+
+	// Only include changed values; anything we don't specify does not get updated
+	if d.HasChange("enabled") {
+		newMsgVpn.Enabled = d.Get("enabled").(bool)
+	}
+	if d.HasChange("max_spool_usage") {
+		newMsgVpn.MaxMsgSpoolUsage = int64(d.Get("max_spool_usage").(int))
+	}
+	if d.HasChange("replication_enabled") {
+		newMsgVpn.ReplicationEnabled = d.Get("replication_enabled").(bool)
+	}
+	params.Body = &newMsgVpn
+
+	log.Printf("[DEBUG] update solace msg VPN group %s", d.Id())
+	log.Printf("[TRACE] msg VPN params are %+v", params)
+	log.Printf("[TRACE] msg VPN Body: %+v", params.Body)
+	_, err := client.MsgVpn.UpdateMsgVpn(params, auth)
+	if err != nil {
+		return fmt.Errorf("[ERROR] Unable to update project %q: %s", params.MsgVpnName, err)
+	}
+
 	return resourceMsgVpnRead(d, m)
 }
 

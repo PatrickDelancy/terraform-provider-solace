@@ -7,4 +7,6 @@ provider "solace" {
 
 resource "solace_msgvpn" "my-vpn" {
     name = "go-tf-1"
+    enabled = false
+    max_spool_usage = 1150
 }
