@@ -67,12 +67,12 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 	params := msg_vpn.NewCreateMsgVpnParams()
 	params.Body = &newMsgVpn
 
-	log.Printf("[DEBUG] create msg vpn %q", name)
+	log.Printf("[DEBUG] create msg vpn %v", name)
 
 	resp, err := client.MsgVpn.CreateMsgVpn(params, auth)
 	if err != nil {
-		log.Printf("[ERROR] Failed to create VPN %q", name)
-		return err
+		sempErr := err.(*msg_vpn.CreateMsgVpnDefault).Payload.Meta.Error
+		return fmt.Errorf("[ERROR] Unable to create message VPN %q: %v", name, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.MsgVpnName)
 	return resourceMsgVpnRead(d, m)
@@ -126,7 +126,8 @@ func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[TRACE] msg VPN Body: %+v", params.Body)
 	_, err := client.MsgVpn.UpdateMsgVpn(params, auth)
 	if err != nil {
-		return fmt.Errorf("[ERROR] Unable to update project %q: %s", params.MsgVpnName, err)
+		sempErr := err.(*msg_vpn.UpdateMsgVpnDefault).Payload.Meta.Error
+		return fmt.Errorf("[ERROR] Unable to update message VPN %q: %v", params.MsgVpnName, formatError(sempErr))
 	}
 
 	return resourceMsgVpnRead(d, m)
@@ -141,7 +142,8 @@ func resourceMsgVpnDelete(d *schema.ResourceData, m interface{}) error {
 
 	_, err := client.MsgVpn.DeleteMsgVpn(params, auth)
 	if err != nil {
-		return fmt.Errorf("[ERROR] Unable to delete project %q: %s", params.MsgVpnName, err)
+		sempErr := err.(*msg_vpn.DeleteMsgVpnDefault).Payload.Meta.Error
+		return fmt.Errorf("[ERROR] Unable to delete message VPN %q: %v", params.MsgVpnName, formatError(sempErr))
 	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but
 	// it is added here for explicitness.

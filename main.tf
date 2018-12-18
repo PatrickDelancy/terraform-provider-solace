@@ -10,3 +10,13 @@ resource "solace_msgvpn" "my-vpn" {
     enabled = false
     max_spool_usage = 1150
 }
+
+resource "solace_msgvpn" "my-vpn-2" {
+    name = "go-tf-2"
+    enabled = true
+    max_spool_usage = 980
+}
+
+resource "solace_msgvpn" "my-vpn-3-conflict" {
+    name = "go-tf-1"
+}
