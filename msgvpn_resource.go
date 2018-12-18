@@ -23,16 +23,65 @@ func resourceMsgVpn() *schema.Resource {
 				Description: "The name of the MSG VPN. Used as an identifier.",
 				Required:    true,
 			},
+			"authentication_basic_enabled": &schema.Schema{
+				Type:        schema.TypeBool,
+				Description: "Enable or disable Basic Authentication for clients connecting to the Message VPN. The default value is true.",
+				Optional:    true,
+				Default:     true,
+			},
 			"enabled": &schema.Schema{
 				Type:        schema.TypeBool,
 				Description: "Whether or not the MSG VPN should be enabled.",
 				Optional:    true,
 				Default:     true,
 			},
+			"max_connection_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum number of client connections that can be simultaneously connected to the Message VPN. This value may be higher than supported by the hardware. The default is 100.",
+				Optional:    true,
+				Default:     100,
+			},
+			"max_egress_flow_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum number of egress flows that can be created in the Message VPN. The default value is 1000.",
+				Optional:    true,
+				Default:     1000,
+			},
+			"max_endpoint_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum number of Queues and Topic Endpoints that can be created in the Message VPN. The default value is 1000.",
+				Optional:    true,
+				Default:     1000,
+			},
+			"max_ingress_flow_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum number of ingress flows that can be created in the Message VPN. The default value is 1000.",
+				Optional:    true,
+				Default:     1000,
+			},
 			"max_spool_usage": &schema.Schema{
 				Type:        schema.TypeInt,
 				Description: "The maximum Message Spool usage by the Message VPN, in megabytes. The default value is 0.",
 				Optional:    true,
+				Default:     0,
+			},
+			"max_subscription_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum number of local client subscriptions (both primary and backup) that can be added to the Message VPN. The default is 500000.",
+				Optional:    true,
+				Default:     500000,
+			},
+			"max_transacted_session_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum number of transacted sessions for the Message VPN. The default varies by platform. The default is 1000.",
+				Optional:    true,
+				Default:     1000,
+			},
+			"max_transaction_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "The maximum number of transactions for the Message VPN. The default varies by platform. The default is 5000.",
+				Optional:    true,
+				Default:     5000,
 			},
 			"replication_enabled": &schema.Schema{
 				Type:        schema.TypeBool,
@@ -55,13 +104,18 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 	// Extract config data from resource data and prepare new VPN object
 	name := d.Get("name").(string)
 	newMsgVpn := models.MsgVpn{
-		MsgVpnName:         name,
-		Enabled:            d.Get("enabled").(bool),
-		ReplicationEnabled: d.Get("replication_enabled").(bool),
-	}
-	// Values that do not have defaults shouldn't be provided if not configured in Terraform
-	if v, ok := d.GetOk("max_spool_usage"); ok {
-		newMsgVpn.MaxMsgSpoolUsage = int64(v.(int))
+		MsgVpnName:                 name,
+		AuthenticationBasicEnabled: d.Get("authentication_basic_enabled").(bool),
+		Enabled:                    d.Get("enabled").(bool),
+		MaxConnectionCount:         int64(d.Get("max_connection_count").(int)),
+		MaxEgressFlowCount:         int64(d.Get("max_egress_flow_count").(int)),
+		MaxEndpointCount:           int64(d.Get("max_endpoint_count").(int)),
+		MaxIngressFlowCount:        int64(d.Get("max_ingress_flow_count").(int)),
+		MaxMsgSpoolUsage:           int64(d.Get("max_spool_usage").(int)),
+		MaxSubscriptionCount:       int64(d.Get("max_subscription_count").(int)),
+		MaxTransactedSessionCount:  int64(d.Get("max_transacted_session_count").(int)),
+		MaxTransactionCount:        int64(d.Get("max_transaction_count").(int)),
+		ReplicationEnabled:         d.Get("replication_enabled").(bool),
 	}
 
 	params := msg_vpn.NewCreateMsgVpnParams()
@@ -95,8 +149,16 @@ func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
 	fmt.Printf("%#v\n", resp.Payload.Data)
 	d.Set("name", resp.Payload.Data.MsgVpnName)
 	d.Set("enabled", resp.Payload.Data.Enabled)
+	d.Set("max_connection_count", resp.Payload.Data.MaxConnectionCount)
+	d.Set("max_egress_flow_count", resp.Payload.Data.MaxEgressFlowCount)
+	d.Set("max_endpoint_count", resp.Payload.Data.MaxEndpointCount)
+	d.Set("max_ingress_flow_count", resp.Payload.Data.MaxIngressFlowCount)
 	d.Set("max_spool_usage", resp.Payload.Data.MaxMsgSpoolUsage)
+	d.Set("max_subscription_count", resp.Payload.Data.MaxSubscriptionCount)
+	d.Set("max_transacted_session_count", resp.Payload.Data.MaxTransactedSessionCount)
+	d.Set("max_transaction_count", resp.Payload.Data.MaxTransactionCount)
 	d.Set("replication_enabled", resp.Payload.Data.ReplicationEnabled)
+	d.Set("authentication_basic_enabled", resp.Payload.Data.AuthenticationBasicEnabled)
 	return nil
 }
 
@@ -110,11 +172,35 @@ func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
 	newMsgVpn := models.MsgVpn{}
 
 	// Only include changed values; anything we don't specify does not get updated
+	if d.HasChange("authentication_basic_enabled") {
+		newMsgVpn.AuthenticationBasicEnabled = d.Get("authentication_basic_enabled").(bool)
+	}
 	if d.HasChange("enabled") {
 		newMsgVpn.Enabled = d.Get("enabled").(bool)
 	}
+	if d.HasChange("max_connection_count") {
+		newMsgVpn.MaxConnectionCount = int64(d.Get("max_connection_count").(int))
+	}
+	if d.HasChange("max_egress_flow_count") {
+		newMsgVpn.MaxEgressFlowCount = int64(d.Get("max_egress_flow_count").(int))
+	}
+	if d.HasChange("max_endpoint_count") {
+		newMsgVpn.MaxEndpointCount = int64(d.Get("max_endpoint_count").(int))
+	}
+	if d.HasChange("max_ingress_flow_count") {
+		newMsgVpn.MaxIngressFlowCount = int64(d.Get("max_ingress_flow_count").(int))
+	}
 	if d.HasChange("max_spool_usage") {
 		newMsgVpn.MaxMsgSpoolUsage = int64(d.Get("max_spool_usage").(int))
+	}
+	if d.HasChange("max_subscription_count") {
+		newMsgVpn.MaxSubscriptionCount = int64(d.Get("max_subscription_count").(int))
+	}
+	if d.HasChange("max_transacted_session_count") {
+		newMsgVpn.MaxTransactedSessionCount = int64(d.Get("max_transacted_session_count").(int))
+	}
+	if d.HasChange("max_transaction_count") {
+		newMsgVpn.MaxTransactionCount = int64(d.Get("max_transaction_count").(int))
 	}
 	if d.HasChange("replication_enabled") {
 		newMsgVpn.ReplicationEnabled = d.Get("replication_enabled").(bool)
