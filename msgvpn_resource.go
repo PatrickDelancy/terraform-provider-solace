@@ -124,19 +124,19 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 	params := msg_vpn.NewCreateMsgVpnParams()
 	params.Body = &newMsgVpn
 
-	log.Printf("[DEBUG] create msg vpn %v", name)
-
 	resp, err := client.MsgVpn.CreateMsgVpn(params, auth)
 	if err != nil {
 		sempErr := err.(*msg_vpn.CreateMsgVpnDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to create message VPN %q: %v", name, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.MsgVpnName)
+
+	log.Printf("[DEBUG] Finished creating message VPN %q", name)
 	return resourceMsgVpnRead(d, m)
 }
 
 func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
-	log.Print("[DEBUG] Reading msg vpn ...")
+	log.Printf("[DEBUG] Reading msg vpn %q...", d.Id())
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
