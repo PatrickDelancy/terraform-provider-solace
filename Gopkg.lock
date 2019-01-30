@@ -403,7 +403,7 @@
   revision = "fa9f258a92500514cc8e9c67020487709df92432"
 
 [[projects]]
-  digest = "1:5145bded18e0f1cf73b0123304fb9d528568bf530674c84b6cb0c204fdbe7691"
+  digest = "1:088b44c87e9702ef29c2c96fdd2bff46c05b4f42e5ad61d6e21d1522b31ba73d"
   name = "github.com/hashicorp/terraform"
   packages = [
     "config",
@@ -415,6 +415,8 @@
     "helper/hashcode",
     "helper/hilmapstructure",
     "helper/schema",
+    "helper/structure",
+    "helper/validation",
     "httpclient",
     "moduledeps",
     "plugin",
@@ -722,11 +724,13 @@
   input-imports = [
     "github.com/ExalDraen/semp-client/client",
     "github.com/ExalDraen/semp-client/client/msg_vpn",
+    "github.com/ExalDraen/semp-client/client/operations",
     "github.com/ExalDraen/semp-client/models",
     "github.com/go-openapi/runtime",
     "github.com/go-openapi/runtime/client",
     "github.com/go-openapi/strfmt",
     "github.com/hashicorp/terraform/helper/schema",
+    "github.com/hashicorp/terraform/helper/validation",
     "github.com/hashicorp/terraform/plugin",
     "github.com/hashicorp/terraform/terraform",
   ]
