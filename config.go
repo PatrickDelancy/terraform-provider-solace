@@ -24,7 +24,8 @@ type ClientAndAuth struct {
 // Client returns a go-swagger API client to interact with the given solace instance
 func (c *Config) Client() (interface{}, error) {
 
-	// create the API client
+	// create the API client, enforcing http. go-swagger will always use https if available so
+	// need to force http here.
 	schemes := []string{"http"}
 	auth := httptransport.BasicAuth(c.User, c.Password)
 	client := apiclient.New(httptransport.New(c.Host, c.BasePath, schemes), strfmt.Default)

@@ -90,6 +90,9 @@ func resourceMsgVpn() *schema.Resource {
 				Default:     false,
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
 
