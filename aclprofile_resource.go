@@ -10,6 +10,7 @@ import (
 
 	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func resourceACLProfile() *schema.Resource {
@@ -26,11 +27,31 @@ func resourceACLProfile() *schema.Resource {
 				Required:    true,
 			},
 			// Each ACL must belong to a VPN, but optionally we use the provider set default,
-			// and bail if neither is set. Thus the parameter is optional
+			// and bail if neither is set. Thus the parameter is optional.
 			"msg_vpn": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. If unset the provider default is used.",
 				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+			},
+			"client_connection_default_action": &schema.Schema{
+				Type:         schema.TypeString,
+				Description:  "The default action when a Client connects to the Message VPN. Must be one of \"allow\" or \"disallow\"",
+				Optional:     true,
+				ValidateFunc: validation.StringInSlice([]string{"allow", "disallow"}, false),
+			},
+			"publish_topic_default_action": &schema.Schema{
+				Type:         schema.TypeString,
+				Description:  "The default action to take when a Client publishes to a Topic in the Message VPN. Must be one of \"allow\" or \"disallow\"",
+				Optional:     true,
+				ValidateFunc: validation.StringInSlice([]string{"allow", "disallow"}, false),
+			},
+			"subscribe_topic_default_action": &schema.Schema{
+				Type:         schema.TypeString,
+				Description:  "The default action to take when a Client subscribes to a Topic in the Message VPN. Must be one of \"allow\" or \"disallow\"",
+				Optional:     true,
+				ValidateFunc: validation.StringInSlice([]string{"allow", "disallow"}, false),
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -60,6 +81,7 @@ func resourceACLProfileCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	params := operations.NewCreateMsgVpnACLProfileParams()
+	params.MsgVpnName = vpn
 	params.Body = &acl
 
 	resp, err := client.Operations.CreateMsgVpnACLProfile(params, auth)

@@ -12,6 +12,7 @@ This is a problem when trying to update an attribute from a *non-empty* to an *e
 
 ### Added
 * Basic scaffolding for terraform provider
-* Very basic MSG VPN resource with a few select attributes and create/destroy/update capability
+* Very basic MSG VPN resource with a few select attributes and create/destroy/update and import capability
+* Basic ACL Profile resource without properties.
 
 [Unreleased]: https://github.com/ExalDraen/terraform-provider-solace/compare/

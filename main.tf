@@ -3,20 +3,17 @@ provider "solace" {
     base_path = "/SEMP/v2/config"
     user = "admin"
     password = "alex"
+    msg_vpn = "go-tf-1"
 }
 
 resource "solace_msgvpn" "my-vpn" {
     name = "go-tf-1"
-    enabled = false
+    enabled = true
+    authentication_basic_enabled = false
     max_spool_usage = 1150
 }
 
-resource "solace_msgvpn" "my-vpn-2" {
-    name = "go-tf-2"
-    enabled = true
-    max_spool_usage = 980
-}
-
-resource "solace_msgvpn" "my-vpn-3-conflict" {
-    name = "go-tf-1"
+resource "solace_aclprofile" "my-acl" {
+    name = "ach-test-acl-1"
+    msg_vpn = "go-tf-1"
 }
