@@ -100,9 +100,9 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 	log.Print("[DEBUG] Creating msg vpn ...")
 
 	// Get our Solace client
-	ca := m.(ClientAndAuth)
-	client := ca.Client
-	auth := ca.Auth
+	c := m.(*Config)
+	client := c.Client
+	auth := c.Auth
 
 	// Extract config data from resource data and prepare new VPN object
 	name := d.Get("name").(string)
@@ -137,9 +137,9 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 
 func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
 	log.Print("[DEBUG] Reading msg vpn ...")
-	ca := m.(ClientAndAuth)
-	client := ca.Client
-	auth := ca.Auth
+	c := m.(*Config)
+	client := c.Client
+	auth := c.Auth
 	getParams := msg_vpn.NewGetMsgVpnParams()
 	getParams.MsgVpnName = d.Id()
 
@@ -166,9 +166,9 @@ func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
-	ca := m.(ClientAndAuth)
-	client := ca.Client
-	auth := ca.Auth
+	c := m.(*Config)
+	client := c.Client
+	auth := c.Auth
 
 	params := msg_vpn.NewUpdateMsgVpnParams()
 	params.MsgVpnName = d.Id()
@@ -223,9 +223,9 @@ func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceMsgVpnDelete(d *schema.ResourceData, m interface{}) error {
-	ca := m.(ClientAndAuth)
-	client := ca.Client
-	auth := ca.Auth
+	c := m.(*Config)
+	client := c.Client
+	auth := c.Auth
 	params := msg_vpn.NewDeleteMsgVpnParams()
 	params.MsgVpnName = d.Id()
 

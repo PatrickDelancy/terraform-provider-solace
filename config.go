@@ -7,12 +7,17 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// Config is per-provider, specifies where to connect to solace
+// Config is the configuration structure used to instantiate the Solace client as well as
+// holding per-provider gloabl data.
 type Config struct {
 	User     string
 	Password string
 	Host     string
 	BasePath string
+	MsgVPN   string
+
+	Auth   runtime.ClientAuthInfoWriter
+	Client *apiclient.SEMPSolaceElementManagementProtocol
 }
 
 // ClientAndAuth bundles all the information needed to connect and act on Solace
@@ -21,14 +26,17 @@ type ClientAndAuth struct {
 	Client *apiclient.SEMPSolaceElementManagementProtocol
 }
 
-// Client returns a go-swagger API client to interact with the given solace instance
-func (c *Config) Client() (interface{}, error) {
+// loadAndValidate validates the config provided and fully prepares the Config for use by
+// the solace provider. This includes instantiating any API clients.
+func (c *Config) loadAndValidate() error {
 
 	// create the API client, enforcing http. go-swagger will always use https if available so
 	// need to force http here.
 	schemes := []string{"http"}
 	auth := httptransport.BasicAuth(c.User, c.Password)
 	client := apiclient.New(httptransport.New(c.Host, c.BasePath, schemes), strfmt.Default)
+	c.Client = client
+	c.Auth = auth
 
-	return ClientAndAuth{Auth: auth, Client: client}, nil
+	return nil
 }

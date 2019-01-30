@@ -32,6 +32,12 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("SOLACE_BASE_PATH", ""),
 				Description: descriptions["base_path"],
 			},
+			"msg_vpn": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("SOLACE_MGS_VPN", ""),
+				Description: descriptions["msg_vpn"],
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"solace_msgvpn": resourceMsgVpn(),
@@ -49,10 +55,12 @@ func init() {
 		"password":  "The password for the Solace management user",
 		"host":      "URL of the Solace host ",
 		"base_path": "The Solace SEMP v2 base API path. Usually something like '/SEMP/v2/config'",
+		"msg_vpn":   "The default Solace MSG VPN to use for resources.",
 	}
 }
 
-// providerConfigure returns a configured Solace ClientAndAuth
+// providerConfigure fully configures a solace provider and returns
+// a config struct ready to be used by all resources and data sources.
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config := Config{
 		User:     d.Get("user").(string),
@@ -61,5 +69,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Host:     d.Get("host").(string),
 	}
 
-	return config.Client()
+	if err := config.loadAndValidate(); err != nil {
+		return nil, err
+	}
+	return &config, nil
 }
