@@ -34,3 +34,10 @@ resource "solace_aclprofile_clientconnexception" "my-machine-exc" {
     msg_vpn = "go-tf-1"
     address = "127.0.0.1/10"
 }
+
+resource "solace_aclprofile_publishexception" "my-mon-allow" {
+    acl = "ach-test-acl-1"
+    msg_vpn = "go-tf-1"
+    topic_syntax = "smf"
+    topic = "box-foobar/>"
+}
