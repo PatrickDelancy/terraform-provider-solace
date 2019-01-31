@@ -28,3 +28,9 @@ resource "solace_aclprofile" "my-acl" {
     publish_topic_default_action = "allow"
     subscribe_topic_default_action = "allow"
 }
+
+resource "solace_aclprofile_clientconnexception" "my-machine-exc" {
+    acl = "ach-test-acl-1"
+    msg_vpn = "go-tf-1"
+    address = "127.0.0.1/10"
+}

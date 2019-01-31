@@ -40,8 +40,9 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"solace_msgvpn":     resourceMsgVpn(),
-			"solace_aclprofile": resourceACLProfile(),
+			"solace_msgvpn":                         resourceMsgVpn(),
+			"solace_aclprofile":                     resourceACLProfile(),
+			"solace_aclprofile_clientconnexception": resourceACLClientConnException(),
 		},
 
 		ConfigureFunc: providerConfigure,
