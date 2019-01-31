@@ -3,8 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-
-	"github.com/ExalDraen/semp-client/client/msg_vpn"
+	"strings"
 
 	"github.com/ExalDraen/semp-client/models"
 
@@ -25,6 +24,7 @@ func resourceACLProfile() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The name of the ACL profile. Used as a unique identifier.",
 				Required:    true,
+				ForceNew:    true,
 			},
 			// Each ACL must belong to a VPN, but optionally we use the provider set default,
 			// and bail if neither is set. Thus the parameter is optional.
@@ -55,7 +55,7 @@ func resourceACLProfile() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: resourceACLProfileImport,
 		},
 	}
 }
@@ -78,6 +78,16 @@ func resourceACLProfileCreate(d *schema.ResourceData, m interface{}) error {
 	acl := models.MsgVpnACLProfile{
 		ACLProfileName: name,
 		MsgVpnName:     vpn,
+	}
+	// Only set these if they're actually set (not their default value)
+	if v, ok := d.GetOk("client_connection_default_action"); ok == true {
+		acl.ClientConnectDefaultAction = v.(string)
+	}
+	if v, ok := d.GetOk("publish_topic_default_action"); ok == true {
+		acl.PublishTopicDefaultAction = v.(string)
+	}
+	if v, ok := d.GetOk("subscribe_topic_default_action"); ok == true {
+		acl.SubscribeTopicDefaultAction = v.(string)
 	}
 
 	params := operations.NewCreateMsgVpnACLProfileParams()
@@ -119,6 +129,10 @@ func resourceACLProfileRead(d *schema.ResourceData, m interface{}) error {
 	fmt.Printf("%#v\n", resp.Payload.Data)
 	d.Set("name", resp.Payload.Data.ACLProfileName)
 	d.Set("msg_vpn", resp.Payload.Data.MsgVpnName)
+	d.Set("client_connection_default_action", resp.Payload.Data.ClientConnectDefaultAction)
+	d.Set("publish_topic_default_action", resp.Payload.Data.PublishTopicDefaultAction)
+	d.Set("subscribe_topic_default_action", resp.Payload.Data.SubscribeTopicDefaultAction)
+
 	return nil
 }
 
@@ -136,10 +150,24 @@ func resourceACLProfileUpdate(d *schema.ResourceData, m interface{}) error {
 
 	params.ACLProfileName = d.Id()
 	params.MsgVpnName = vpn
+	acl := models.MsgVpnACLProfile{}
+	acl.MsgVpnName = vpn
+
+	// Only include changed values; anything we don't specify does not get updated
+	if d.HasChange("client_connection_default_action") {
+		acl.ClientConnectDefaultAction = d.Get("client_connection_default_action").(string)
+	}
+	if d.HasChange("publish_topic_default_action") {
+		acl.PublishTopicDefaultAction = d.Get("publish_topic_default_action").(string)
+	}
+	if d.HasChange("subscribe_topic_default_action") {
+		acl.SubscribeTopicDefaultAction = d.Get("subscribe_topic_default_action").(string)
+	}
+	params.Body = &acl
 
 	_, err = client.Operations.UpdateMsgVpnACLProfile(params, auth)
 	if err != nil {
-		sempErr := err.(*msg_vpn.UpdateMsgVpnDefault).Payload.Meta.Error
+		sempErr := err.(*operations.UpdateMsgVpnACLProfileDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to update ACL %q: %v", params.ACLProfileName, formatError(sempErr))
 	}
 
@@ -168,4 +196,17 @@ func resourceACLProfileDelete(d *schema.ResourceData, m interface{}) error {
 	// it is added here for explicitness.
 	d.SetId("")
 	return nil
+}
+
+func resourceACLProfileImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+	idParts := strings.Split(d.Id(), "/")
+	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN/ACL-PROFILE", d.Id())
+	}
+	vpn := idParts[0]
+	acl := idParts[1]
+	d.Set("msg_vpn", vpn)
+
+	d.SetId(acl)
+	return []*schema.ResourceData{d}, nil
 }

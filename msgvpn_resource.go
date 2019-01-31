@@ -22,6 +22,7 @@ func resourceMsgVpn() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. Used as an identifier.",
 				Required:    true,
+				ForceNew:    true,
 			},
 			"authentication_basic_enabled": &schema.Schema{
 				Type:        schema.TypeBool,
