@@ -107,23 +107,58 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 
 	// Extract config data from resource data and prepare new VPN object
 	name := d.Get("name").(string)
-	newMsgVpn := models.MsgVpn{
-		MsgVpnName:                 name,
-		AuthenticationBasicEnabled: d.Get("authentication_basic_enabled").(bool),
-		Enabled:                    d.Get("enabled").(bool),
-		MaxConnectionCount:         int64(d.Get("max_connection_count").(int)),
-		MaxEgressFlowCount:         int64(d.Get("max_egress_flow_count").(int)),
-		MaxEndpointCount:           int64(d.Get("max_endpoint_count").(int)),
-		MaxIngressFlowCount:        int64(d.Get("max_ingress_flow_count").(int)),
-		MaxMsgSpoolUsage:           int64(d.Get("max_spool_usage").(int)),
-		MaxSubscriptionCount:       int64(d.Get("max_subscription_count").(int)),
-		MaxTransactedSessionCount:  int64(d.Get("max_transacted_session_count").(int)),
-		MaxTransactionCount:        int64(d.Get("max_transaction_count").(int)),
-		ReplicationEnabled:         d.Get("replication_enabled").(bool),
+
+	vpn := models.MsgVpn{
+		MsgVpnName: name,
+	}
+	// Only set these if they're actually set (not their default value)
+	if v, ok := d.GetOk("authentication_basic_enabled"); ok == true {
+		val := v.(bool)
+		vpn.AuthenticationBasicEnabled = &val
+	}
+	if v, ok := d.GetOk("enabled"); ok == true {
+		val := v.(bool)
+		vpn.Enabled = &val
+	}
+	if v, ok := d.GetOk("replication_enabled"); ok == true {
+		val := v.(bool)
+		vpn.ReplicationEnabled = &val
+	}
+	if v, ok := d.GetOk("max_connection_count"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxConnectionCount = &val
+	}
+	if v, ok := d.GetOk("max_egress_flow_count"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxEgressFlowCount = &val
+	}
+	if v, ok := d.GetOk("max_endpoint_count"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxEndpointCount = &val
+	}
+	if v, ok := d.GetOk("max_ingress_flow_count"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxIngressFlowCount = &val
+	}
+	if v, ok := d.GetOk("max_spool_usage"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxMsgSpoolUsage = &val
+	}
+	if v, ok := d.GetOk("max_subscription_count"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxSubscriptionCount = &val
+	}
+	if v, ok := d.GetOk("max_transacted_session_count"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxTransactedSessionCount = &val
+	}
+	if v, ok := d.GetOk("max_transaction_count"); ok == true {
+		val := int64(v.(int))
+		vpn.MaxTransactionCount = &val
 	}
 
 	params := msg_vpn.NewCreateMsgVpnParams()
-	params.Body = &newMsgVpn
+	params.Body = &vpn
 
 	resp, err := client.MsgVpn.CreateMsgVpn(params, auth)
 	if err != nil {
@@ -167,6 +202,7 @@ func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
+	log.Printf("[DEBUG] Updateing msg VPN %v", d.Id())
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
@@ -177,41 +213,51 @@ func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
 
 	// Only include changed values; anything we don't specify does not get updated
 	if d.HasChange("authentication_basic_enabled") {
-		newMsgVpn.AuthenticationBasicEnabled = d.Get("authentication_basic_enabled").(bool)
+		val := d.Get("authentication_basic_enabled").(bool)
+		newMsgVpn.AuthenticationBasicEnabled = &val
 	}
 	if d.HasChange("enabled") {
-		newMsgVpn.Enabled = d.Get("enabled").(bool)
+		val := d.Get("enabled").(bool)
+		newMsgVpn.Enabled = &val
 	}
 	if d.HasChange("max_connection_count") {
-		newMsgVpn.MaxConnectionCount = int64(d.Get("max_connection_count").(int))
+		val := int64(d.Get("max_connection_count").(int))
+		newMsgVpn.MaxConnectionCount = &val
 	}
 	if d.HasChange("max_egress_flow_count") {
-		newMsgVpn.MaxEgressFlowCount = int64(d.Get("max_egress_flow_count").(int))
+		val := int64(d.Get("max_egress_flow_count").(int))
+		newMsgVpn.MaxEgressFlowCount = &val
 	}
 	if d.HasChange("max_endpoint_count") {
-		newMsgVpn.MaxEndpointCount = int64(d.Get("max_endpoint_count").(int))
+		val := int64(d.Get("max_endpoint_count").(int))
+		newMsgVpn.MaxEndpointCount = &val
 	}
 	if d.HasChange("max_ingress_flow_count") {
-		newMsgVpn.MaxIngressFlowCount = int64(d.Get("max_ingress_flow_count").(int))
+		val := int64(d.Get("max_ingress_flow_count").(int))
+		newMsgVpn.MaxIngressFlowCount = &val
 	}
 	if d.HasChange("max_spool_usage") {
-		newMsgVpn.MaxMsgSpoolUsage = int64(d.Get("max_spool_usage").(int))
+		val := int64(d.Get("max_spool_usage").(int))
+		newMsgVpn.MaxMsgSpoolUsage = &val
 	}
 	if d.HasChange("max_subscription_count") {
-		newMsgVpn.MaxSubscriptionCount = int64(d.Get("max_subscription_count").(int))
+		val := int64(d.Get("max_subscription_count").(int))
+		newMsgVpn.MaxSubscriptionCount = &val
 	}
 	if d.HasChange("max_transacted_session_count") {
-		newMsgVpn.MaxTransactedSessionCount = int64(d.Get("max_transacted_session_count").(int))
+		val := int64(d.Get("max_transacted_session_count").(int))
+		newMsgVpn.MaxTransactedSessionCount = &val
 	}
 	if d.HasChange("max_transaction_count") {
-		newMsgVpn.MaxTransactionCount = int64(d.Get("max_transaction_count").(int))
+		val := int64(d.Get("max_transaction_count").(int))
+		newMsgVpn.MaxTransactionCount = &val
 	}
 	if d.HasChange("replication_enabled") {
-		newMsgVpn.ReplicationEnabled = d.Get("replication_enabled").(bool)
+		val := d.Get("replication_enabled").(bool)
+		newMsgVpn.ReplicationEnabled = &val
 	}
 	params.Body = &newMsgVpn
 
-	log.Printf("[DEBUG] update solace msg VPN group %s", d.Id())
 	log.Printf("[TRACE] msg VPN params are %+v", params)
 	log.Printf("[TRACE] msg VPN Body: %+v", params.Body)
 	_, err := client.MsgVpn.UpdateMsgVpn(params, auth)
