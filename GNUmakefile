@@ -17,7 +17,7 @@ test: ## Run the test suite with coverage
 
 release: ## Trigger the release build script
 	@echo "==> Running $@..."
-	@goreleaser --rm-dist --config=./cmd/nomad-toast/goreleaser.yml
+	@goreleaser --rm-dist --config=goreleaser.yml
 
 .PHONY: check
 check: ## Run the gometalinter suite
