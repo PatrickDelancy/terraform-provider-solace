@@ -9,7 +9,6 @@ tools: ## Install the tools used to test and build
 
 build: ## Build for development purposes
 	@echo "==> Running $@..."
-	dep ensure
 	go build
 
 test: ## Run the test suite with coverage
@@ -24,6 +23,7 @@ release: ## Trigger the release build script
 .PHONY: check
 check: ## Run the gometalinter suite
 	@echo "==> Running $@..."
+	dep ensure
 	gometalinter \
 			--deadline 10m \
 			--vendor \
