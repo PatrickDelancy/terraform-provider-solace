@@ -44,6 +44,7 @@ func Provider() *schema.Provider {
 			"solace_aclprofile":                     resourceACLProfile(),
 			"solace_aclprofile_clientconnexception": resourceACLClientConnException(),
 			"solace_aclprofile_publishexception":    resourceACLPublishException(),
+			"solace_aclprofile_subscribeexception":  resourceACLSubscribeException(),
 		},
 
 		ConfigureFunc: providerConfigure,
@@ -70,6 +71,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Password: d.Get("password").(string),
 		BasePath: d.Get("base_path").(string),
 		Host:     d.Get("host").(string),
+		MsgVPN:   d.Get("msg_vpn").(string),
 	}
 
 	if err := config.loadAndValidate(); err != nil {

@@ -142,9 +142,9 @@ func resourceACLClientConnExceptionDelete(d *schema.ResourceData, m interface{})
 }
 
 func resourceACLClientConnExceptionImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	idParts := strings.Split(d.Id(), "/")
+	idParts := strings.Split(d.Id(), "|")
 	if len(idParts) != 3 || idParts[0] == "" || idParts[1] == "" || idParts[2] == "" {
-		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN/ACL-PROFILE/CLIENT-CONN-EXC-ADDR", d.Id())
+		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN|ACL-PROFILE|CLIENT-CONN-EXC-ADDR", d.Id())
 	}
 	vpn := idParts[0]
 	acl := idParts[1]

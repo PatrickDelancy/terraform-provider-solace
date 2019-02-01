@@ -11,11 +11,11 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceACLPublishException() *schema.Resource {
+func resourceACLSubscribeException() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceACLPublishExceptionCreate,
-		Read:   resourceACLPublishExceptionRead,
-		Delete: resourceACLPublishExceptionDelete,
+		Create: resourceACLSubscribeExceptionCreate,
+		Read:   resourceACLSubscribeExceptionRead,
+		Delete: resourceACLSubscribeExceptionDelete,
 
 		Schema: map[string]*schema.Schema{
 			"topic": &schema.Schema{
@@ -47,13 +47,13 @@ func resourceACLPublishException() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			State: resourceACLPublishExceptionImport,
+			State: resourceACLSubscribeExceptionImport,
 		},
 	}
 }
 
-func resourceACLPublishExceptionCreate(d *schema.ResourceData, m interface{}) error {
-	log.Print("[DEBUG] Creating ACL Profile publish exception...")
+func resourceACLSubscribeExceptionCreate(d *schema.ResourceData, m interface{}) error {
+	log.Print("[DEBUG] Creating ACL Profile subscribe exception...")
 
 	// Get our Solace client
 	c := m.(*Config)
@@ -69,54 +69,54 @@ func resourceACLPublishExceptionCreate(d *schema.ResourceData, m interface{}) er
 		return err
 	}
 
-	PubExc := models.MsgVpnACLProfilePublishException{
-		TopicSyntax:           syntax,
-		PublishExceptionTopic: topic,
-		ACLProfileName:        acl,
-		MsgVpnName:            vpn,
+	SubExc := models.MsgVpnACLProfileSubscribeException{
+		TopicSyntax:             syntax,
+		SubscribeExceptionTopic: topic,
+		ACLProfileName:          acl,
+		MsgVpnName:              vpn,
 	}
 
-	params := operations.NewCreateMsgVpnACLProfilePublishExceptionParams()
+	params := operations.NewCreateMsgVpnACLProfileSubscribeExceptionParams()
 	params.MsgVpnName = vpn
 	params.ACLProfileName = acl
-	params.Body = &PubExc
+	params.Body = &SubExc
 
-	resp, err := client.Operations.CreateMsgVpnACLProfilePublishException(params, auth)
+	resp, err := client.Operations.CreateMsgVpnACLProfileSubscribeException(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.CreateMsgVpnACLProfilePublishExceptionDefault).Payload.Meta.Error
-		return fmt.Errorf("[ERROR] Unable to create ACL profile publish exception %q for ACL %q on VPN %q: %q", PubExc, acl, vpn, formatError(sempErr))
+		sempErr := err.(*operations.CreateMsgVpnACLProfileSubscribeExceptionDefault).Payload.Meta.Error
+		return fmt.Errorf("[ERROR] Unable to create ACL Profile subscribe exception %q for ACL %q on VPN %q: %q", SubExc, acl, vpn, formatError(sempErr))
 	}
-	d.SetId(resp.Payload.Data.PublishExceptionTopic)
+	d.SetId(resp.Payload.Data.SubscribeExceptionTopic)
 
-	log.Printf("[DEBUG] Finished creating ACL profile publish exception %q on ACL %q on VPN %q", PubExc, acl, vpn)
-	return resourceACLPublishExceptionRead(d, m)
+	log.Printf("[DEBUG] Finished creating ACL Profile subscribe exception %q on ACL %q on VPN %q", SubExc, acl, vpn)
+	return resourceACLSubscribeExceptionRead(d, m)
 }
 
-func resourceACLPublishExceptionRead(d *schema.ResourceData, m interface{}) error {
-	log.Printf("[DEBUG] Reading ACL Profile publish exception %q ...", d.Id())
+func resourceACLSubscribeExceptionRead(d *schema.ResourceData, m interface{}) error {
+	log.Printf("[DEBUG] Reading ACL Profile subscribe exception %q ...", d.Id())
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewGetMsgVpnACLProfilePublishExceptionParams()
+	params := operations.NewGetMsgVpnACLProfileSubscribeExceptionParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
 		return err
 	}
 
-	params.PublishExceptionTopic = d.Id()
+	params.SubscribeExceptionTopic = d.Id()
 	params.TopicSyntax = d.Get("topic_syntax").(string)
 	params.ACLProfileName = d.Get("acl").(string)
 	params.MsgVpnName = vpn
 
-	resp, err := client.Operations.GetMsgVpnACLProfilePublishException(params, auth)
+	resp, err := client.Operations.GetMsgVpnACLProfileSubscribeException(params, auth)
 	if err != nil {
-		log.Printf("[WARN] No ACL Profile publish exception found found: %q", d.Id())
+		log.Printf("[WARN] No ACL Profile subscribe exception found found: %q", d.Id())
 		d.SetId("")
 		return nil
 	}
 	log.Printf("%#v\n", resp.Payload.Data)
-	d.Set("topic", resp.Payload.Data.PublishExceptionTopic)
+	d.Set("topic", resp.Payload.Data.SubscribeExceptionTopic)
 	d.Set("topic_syntax", resp.Payload.Data.TopicSyntax)
 	d.Set("acl", resp.Payload.Data.ACLProfileName)
 	d.Set("msg_vpn", resp.Payload.Data.MsgVpnName)
@@ -124,26 +124,26 @@ func resourceACLPublishExceptionRead(d *schema.ResourceData, m interface{}) erro
 	return nil
 }
 
-func resourceACLPublishExceptionDelete(d *schema.ResourceData, m interface{}) error {
-	log.Printf("[DEBUG] Deleting ACL Profile publish exception %q ...", d.Id())
+func resourceACLSubscribeExceptionDelete(d *schema.ResourceData, m interface{}) error {
+	log.Printf("[DEBUG] Deleting ACL Profile subscribe exception %q ...", d.Id())
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewDeleteMsgVpnACLProfilePublishExceptionParams()
+	params := operations.NewDeleteMsgVpnACLProfileSubscribeExceptionParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
 		return err
 	}
-	params.PublishExceptionTopic = d.Id()
+	params.SubscribeExceptionTopic = d.Id()
 	params.TopicSyntax = d.Get("topic_syntax").(string)
 	params.ACLProfileName = d.Get("acl").(string)
 	params.MsgVpnName = vpn
 
-	_, err = client.Operations.DeleteMsgVpnACLProfilePublishException(params, auth)
+	_, err = client.Operations.DeleteMsgVpnACLProfileSubscribeException(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.DeleteMsgVpnACLProfilePublishExceptionDefault).Payload.Meta.Error
-		return fmt.Errorf("[ERROR] Unable to ACL profile publish exception exception %q for ACL %q on VPN %q: %q",
+		sempErr := err.(*operations.DeleteMsgVpnACLProfileSubscribeExceptionDefault).Payload.Meta.Error
+		return fmt.Errorf("[ERROR] Unable to ACL Profile subscribe exception exception %q for ACL %q on VPN %q: %q",
 			params.TopicSyntax, params.ACLProfileName, params.MsgVpnName, formatError(sempErr))
 	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but
@@ -152,18 +152,18 @@ func resourceACLPublishExceptionDelete(d *schema.ResourceData, m interface{}) er
 	return nil
 }
 
-func resourceACLPublishExceptionImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+func resourceACLSubscribeExceptionImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	idParts := strings.Split(d.Id(), "|")
 	if len(idParts) != 4 || idParts[0] == "" || idParts[1] == "" || idParts[2] == "" || idParts[3] == "" {
-		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN|ACL-PROFILE|TOPIC-SYNTAX|PUB-EXC-TOPIC", d.Id())
+		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN|ACL-PROFILE|TOPIC-SYNTAX|SUB-EXC-TOPIC", d.Id())
 	}
 	vpn := idParts[0]
 	acl := idParts[1]
 	syntax := idParts[2]
-	PubExc := idParts[3]
+	SubExc := idParts[3]
 	d.Set("msg_vpn", vpn)
 	d.Set("acl", acl)
 	d.Set("topic_syntax", syntax)
-	d.SetId(PubExc)
+	d.SetId(SubExc)
 	return []*schema.ResourceData{d}, nil
 }

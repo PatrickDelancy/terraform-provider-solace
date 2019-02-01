@@ -19,7 +19,7 @@ type TerraformResourceData interface {
 
 // formatError returns a useful string representation of the SempError provided
 func formatError(err *models.SempError) string {
-	return fmt.Sprintf("[%v]: %v - %v", *err.Code, *err.Description, *err.Status)
+	return fmt.Sprintf("[%v] - %v: %v", *err.Code, *err.Description, *err.Status)
 }
 
 // getMsgVPN reads the "msg_vpn" field from the given resource data and falls
