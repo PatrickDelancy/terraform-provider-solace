@@ -9,7 +9,7 @@ import (
 
 	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
-)
+) 
 
 func resourceACLClientConnException() *schema.Resource {
 	return &schema.Resource{
@@ -112,7 +112,7 @@ func resourceACLClientConnExceptionRead(d *schema.ResourceData, m interface{}) e
 	d.Set("msg_vpn", resp.Payload.Data.MsgVpnName)
 
 	return nil
-}
+} 
 
 func resourceACLClientConnExceptionDelete(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[DEBUG] Deleting ACL Profile client exception %q ...", d.Id())
@@ -144,7 +144,7 @@ func resourceACLClientConnExceptionDelete(d *schema.ResourceData, m interface{})
 func resourceACLClientConnExceptionImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	idParts := strings.Split(d.Id(), "|")
 	if len(idParts) != 3 || idParts[0] == "" || idParts[1] == "" || idParts[2] == "" {
-		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN|ACL-PROFILE|CLIENT-CONN-EXC-ADDR", d.Id())
+		return nil, fmt.Errorf("unexpected format of ID (%q), expected MSG-VPN|ACL-PROFILE|CLIENT-CONN-EXC-ADDR", d.Id())
 	}
 	vpn := idParts[0]
 	acl := idParts[1]

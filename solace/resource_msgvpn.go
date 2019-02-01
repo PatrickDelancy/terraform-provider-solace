@@ -112,47 +112,47 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 		MsgVpnName: name,
 	}
 	// Only set these if they're actually set (not their default value)
-	if v, ok := d.GetOk("authentication_basic_enabled"); ok == true {
+	if v, ok := d.GetOk("authentication_basic_enabled"); ok {
 		val := v.(bool)
 		vpn.AuthenticationBasicEnabled = &val
 	}
-	if v, ok := d.GetOk("enabled"); ok == true {
+	if v, ok := d.GetOk("enabled"); ok {
 		val := v.(bool)
 		vpn.Enabled = &val
 	}
-	if v, ok := d.GetOk("replication_enabled"); ok == true {
+	if v, ok := d.GetOk("replication_enabled"); ok {
 		val := v.(bool)
 		vpn.ReplicationEnabled = &val
 	}
-	if v, ok := d.GetOk("max_connection_count"); ok == true {
+	if v, ok := d.GetOk("max_connection_count"); ok {
 		val := int64(v.(int))
 		vpn.MaxConnectionCount = &val
 	}
-	if v, ok := d.GetOk("max_egress_flow_count"); ok == true {
+	if v, ok := d.GetOk("max_egress_flow_count"); ok {
 		val := int64(v.(int))
 		vpn.MaxEgressFlowCount = &val
 	}
-	if v, ok := d.GetOk("max_endpoint_count"); ok == true {
+	if v, ok := d.GetOk("max_endpoint_count"); ok {
 		val := int64(v.(int))
 		vpn.MaxEndpointCount = &val
 	}
-	if v, ok := d.GetOk("max_ingress_flow_count"); ok == true {
+	if v, ok := d.GetOk("max_ingress_flow_count"); ok {
 		val := int64(v.(int))
 		vpn.MaxIngressFlowCount = &val
 	}
-	if v, ok := d.GetOk("max_spool_usage"); ok == true {
+	if v, ok := d.GetOk("max_spool_usage"); ok {
 		val := int64(v.(int))
 		vpn.MaxMsgSpoolUsage = &val
 	}
-	if v, ok := d.GetOk("max_subscription_count"); ok == true {
+	if v, ok := d.GetOk("max_subscription_count"); ok {
 		val := int64(v.(int))
 		vpn.MaxSubscriptionCount = &val
 	}
-	if v, ok := d.GetOk("max_transacted_session_count"); ok == true {
+	if v, ok := d.GetOk("max_transacted_session_count"); ok {
 		val := int64(v.(int))
 		vpn.MaxTransactedSessionCount = &val
 	}
-	if v, ok := d.GetOk("max_transaction_count"); ok == true {
+	if v, ok := d.GetOk("max_transaction_count"); ok {
 		val := int64(v.(int))
 		vpn.MaxTransactionCount = &val
 	}

@@ -155,7 +155,7 @@ func resourceACLSubscribeExceptionDelete(d *schema.ResourceData, m interface{}) 
 func resourceACLSubscribeExceptionImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	idParts := strings.Split(d.Id(), "|")
 	if len(idParts) != 4 || idParts[0] == "" || idParts[1] == "" || idParts[2] == "" || idParts[3] == "" {
-		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN|ACL-PROFILE|TOPIC-SYNTAX|SUB-EXC-TOPIC", d.Id())
+		return nil, fmt.Errorf("unexpected format of ID (%q), expected MSG-VPN|ACL-PROFILE|TOPIC-SYNTAX|SUB-EXC-TOPIC", d.Id())
 	}
 	vpn := idParts[0]
 	acl := idParts[1]

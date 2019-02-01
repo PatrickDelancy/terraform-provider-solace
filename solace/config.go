@@ -8,7 +8,7 @@ import (
 )
 
 // Config is the configuration structure used to instantiate the Solace client as well as
-// holding per-provider gloabl data.
+// holding per-provider global data.
 type Config struct {
 	User     string
 	Password string

@@ -80,13 +80,13 @@ func resourceACLProfileCreate(d *schema.ResourceData, m interface{}) error {
 		MsgVpnName:     vpn,
 	}
 	// Only set these if they're actually set (not their default value)
-	if v, ok := d.GetOk("client_connection_default_action"); ok == true {
+	if v, ok := d.GetOk("client_connection_default_action"); ok {
 		acl.ClientConnectDefaultAction = v.(string)
 	}
-	if v, ok := d.GetOk("publish_topic_default_action"); ok == true {
+	if v, ok := d.GetOk("publish_topic_default_action"); ok {
 		acl.PublishTopicDefaultAction = v.(string)
 	}
-	if v, ok := d.GetOk("subscribe_topic_default_action"); ok == true {
+	if v, ok := d.GetOk("subscribe_topic_default_action"); ok {
 		acl.SubscribeTopicDefaultAction = v.(string)
 	}
 
@@ -196,12 +196,12 @@ func resourceACLProfileDelete(d *schema.ResourceData, m interface{}) error {
 	// it is added here for explicitness.
 	d.SetId("")
 	return nil
-}
+} 
 
 func resourceACLProfileImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	idParts := strings.Split(d.Id(), "/")
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
-		return nil, fmt.Errorf("Unexpected format of ID (%q), expected MSG-VPN/ACL-PROFILE", d.Id())
+		return nil, fmt.Errorf("unexpected format of ID (%q), expected MSG-VPN/ACL-PROFILE", d.Id())
 	}
 	vpn := idParts[0]
 	acl := idParts[1]
