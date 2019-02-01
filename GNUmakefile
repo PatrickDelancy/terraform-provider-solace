@@ -4,10 +4,12 @@ tools: ## Install the tools used to test and build
 	@echo "==> Installing build tools"
 	go get github.com/alecthomas/gometalinter
 	go get github.com/goreleaser/goreleaser
+	go get -u github.com/golang/dep/cmd/dep
 	gometalinter --install
 
 build: ## Build for development purposes
 	@echo "==> Running $@..."
+	dep ensure
 	go build
 
 test: ## Run the test suite with coverage
