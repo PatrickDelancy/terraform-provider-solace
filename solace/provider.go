@@ -46,6 +46,7 @@ func Provider() *schema.Provider {
 			"solace_aclprofile_publishexception":    resourceACLPublishException(),
 			"solace_aclprofile_subscribeexception":  resourceACLSubscribeException(),
 			"solace_clientprofile":                  resourceClientProfile(),
+			"solace_clientusername":                 resourceClientUsername(),
 		},
 
 		ConfigureFunc: providerConfigure,

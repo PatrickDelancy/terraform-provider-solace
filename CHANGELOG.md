@@ -12,9 +12,12 @@ This is a problem when trying to update an attribute from a *non-empty* to an *e
 
 ### Added
 * Basic scaffolding for terraform provider
-* Very basic MSG VPN resource with a few select attributes and create/destroy/update and import capability
-* ACL Profile resource
+* Very basic MSG VPN resource with a few select attributes, CRUD and import capability
+* ACL Profile resource with CRUD
 * ACL profile client connection exceptions
-* ACL profile publish exceptions
+* ACL profile publish, & subscribe exceptions
+* Basic Client profile resource with a few select attributes, CRUD and import capability
+* Basic Client username resource with a few select attributes, CRUD and import capability
+* Makefile to buil, lint and test (but no tests yet). Includes a slew of `gometalinter` linters.
 
 [Unreleased]: https://github.com/ExalDraen/terraform-provider-solace/compare/

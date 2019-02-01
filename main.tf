@@ -68,3 +68,12 @@ resource "solace_clientprofile" "my-client-profile" {
     allow_guaranteed_msg_receive = false
     allow_guaranteed_msg_send = false
 }
+
+# Client username
+resource "solace_clientusername" "my-client-name" {
+    name = "ach-client-name"
+    msg_vpn = "${solace_msgvpn.my-vpn.name}"
+    profile = "${solace_clientprofile.my-client-profile.name}"
+    enabled = true
+    password = "ach-test"
+}
