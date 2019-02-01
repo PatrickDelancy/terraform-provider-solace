@@ -21,39 +21,50 @@ resource "solace_msgvpn" "my-vpn" {
 	max_transaction_count = 555
 }
 
+# ACL profiles
 resource "solace_aclprofile" "my-acl" {
     name = "ach-test-acl-1"
+    msg_vpn = "${solace_msgvpn.my-vpn.name}"
     client_connection_default_action = "disallow"
     publish_topic_default_action = "allow"
     subscribe_topic_default_action = "disallow"
 }
 
 resource "solace_aclprofile_clientconnexception" "my-machine-exc" {
-    acl = "ach-test-acl-1"
+    acl = "${solace_aclprofile.my-acl.name}"
     address = "127.0.0.1/10"
 }
 
 resource "solace_aclprofile_publishexception" "my-mon-allow" {
-    acl = "ach-test-acl-1"
+    acl = "${solace_aclprofile.my-acl.name}"
     topic_syntax = "smf"
     topic = "box-foobar/>"
 }
 
 resource "solace_aclprofile_subscribeexception" "my-sub-allow" {
-    acl = "ach-test-acl-1"
+    acl = "${solace_aclprofile.my-acl.name}"
     topic_syntax = "smf"
     topic = "box3-foobar/>"
 }
 
 resource "solace_aclprofile_subscribeexception" "my-imported-sub" {
-    acl = "ach-test-acl-1"
+    acl = "${solace_aclprofile.my-acl.name}"
     topic = "box-import-topi/>"
     topic_syntax = "smf"
     
 }
 
 resource "solace_aclprofile_subscribeexception" "my-sub-mqtt-allow" {
-    acl = "ach-test-acl-1"
+    acl = "${solace_aclprofile.my-acl.name}"
     topic_syntax = "mqtt"
     topic = "box3-mqtt-foobar/>"
+}
+
+# Client profiles
+resource "solace_clientprofile" "my-client-profile" {
+    name = "ach-client-prof"
+    msg_vpn = "${solace_msgvpn.my-vpn.name}"
+    allow_guaranteed_endpoint_create = true
+    allow_guaranteed_msg_receive = false
+    allow_guaranteed_msg_send = false
 }

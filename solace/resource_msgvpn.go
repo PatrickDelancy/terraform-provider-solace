@@ -185,7 +185,7 @@ func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
-	fmt.Printf("%#v\n", resp.Payload.Data)
+
 	d.Set("name", resp.Payload.Data.MsgVpnName)
 	d.Set("enabled", resp.Payload.Data.Enabled)
 	d.Set("max_connection_count", resp.Payload.Data.MaxConnectionCount)

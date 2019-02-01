@@ -97,7 +97,7 @@ func resourceACLProfileCreate(d *schema.ResourceData, m interface{}) error {
 	resp, err := client.Operations.CreateMsgVpnACLProfile(params, auth)
 	if err != nil {
 		sempErr := err.(*operations.CreateMsgVpnACLProfileDefault).Payload.Meta.Error
-		return fmt.Errorf("[ERROR] Unable to create message VPN %q on vpn %q: %v", name, vpn, formatError(sempErr))
+		return fmt.Errorf("[ERROR] Unable to create ACL profile %q on vpn %q: %v", name, vpn, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.ACLProfileName)
 
@@ -126,7 +126,7 @@ func resourceACLProfileRead(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
-	fmt.Printf("%#v\n", resp.Payload.Data)
+
 	d.Set("name", resp.Payload.Data.ACLProfileName)
 	d.Set("msg_vpn", resp.Payload.Data.MsgVpnName)
 	d.Set("client_connection_default_action", resp.Payload.Data.ClientConnectDefaultAction)
@@ -196,7 +196,7 @@ func resourceACLProfileDelete(d *schema.ResourceData, m interface{}) error {
 	// it is added here for explicitness.
 	d.SetId("")
 	return nil
-} 
+}
 
 func resourceACLProfileImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	idParts := strings.Split(d.Id(), "/")
