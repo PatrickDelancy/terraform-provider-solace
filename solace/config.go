@@ -1,4 +1,4 @@
-package main
+package solace
 
 import (
 	apiclient "github.com/ExalDraen/semp-client/client"
