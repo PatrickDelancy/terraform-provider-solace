@@ -11,14 +11,14 @@ resource "solace_msgvpn" "my-vpn" {
     enabled = true
     authentication_basic_enabled = false
     max_spool_usage = 1100
-	max_connection_count = 123
-	max_egress_flow_count = 456
-	max_endpoint_count = 789
-	max_ingress_flow_count = 111
-	max_spool_usage = 222
-	max_subscription_count = 333
-	max_transacted_session_count = 444
-	max_transaction_count = 555
+    max_connection_count = 123
+    max_egress_flow_count = 456
+    max_endpoint_count = 789
+    max_ingress_flow_count = 111
+    max_spool_usage = 222
+    max_subscription_count = 333
+    max_transacted_session_count = 444
+    max_transaction_count = 555
 }
 
 # ACL profiles

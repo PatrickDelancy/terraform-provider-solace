@@ -19,7 +19,7 @@
 
 ## Using the Binary Packages
 
-Download the [release binary](https://github.com/ExalDraen/terraform-provider-solace/releases) from and copy it to the `$HOME/terraform.d/plugins/<os>_<arch>/terraform-provider-solace` as explained in the [terraform docs](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
+Download the [release binary](https://github.com/ExalDraen/terraform-provider-solace/releases) from and copy it to `$HOME/terraform.d/plugins/<os>_<arch>/terraform-provider-solace` as explained in the [terraform docs](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
 
 For example, in a Linux environment you would copy it to `/home/youruser/terraform.d/plugins/linux_amd64/terraform-provider-solace`, for a MacOS environment to `/Users/youruser/terraform.d/plugins/darwin_amd64/terraform-provider-solace`.
 
@@ -52,6 +52,22 @@ $ $GOPATH/bin/terraform-provider-solace
 ...
 ```
 
+### Testing the Provider
+
+To run acceptance tests you will need to run a local solace instance. Once the instance is running you will need to export the following environment variables.
+
+```sh
+export SOLACE_USER="admin"
+export SOLACE_PASSWORD="alex"
+export SOLACE_HOST="localhost:8080"
+```
+
+You can then run the acceptance tests with
+
+```sh
+TF_ACC=1 make test
+```
+
 ## Documentation
 
 The provider very closely mirrors the SEMPv2 API, including resource and attribute names. In most cases, the name of attributes and resources is the same as in the SEMP API, with `snake_case` instead of `CamelCase`. For example `max_connection_count` instead of `MaxConnectionCount`.
@@ -60,7 +76,7 @@ See [examples/main.tf](examples/main.tf) for some usage examples.
 
 ## Configuration
 
-The provider may be configured using terraform as normal, e.g. 
+The provider may be configured using terraform as normal, e.g.
 
 ```hcl
 provider "solace" {

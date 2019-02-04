@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+* Added basic acceptance test for `solace_msgvpn`. Does not yet run on CI.
+
 ### Changed
 
 * Remove unused `ClientAndAuth` struct.
