@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Remove unused `ClientAndAuth` struct.
+
 ## 0.0.2
 
 ### Changed

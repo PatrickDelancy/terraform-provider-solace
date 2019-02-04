@@ -20,12 +20,6 @@ type Config struct {
 	Client *apiclient.SEMPSolaceElementManagementProtocol
 }
 
-// ClientAndAuth bundles all the information needed to connect and act on Solace
-type ClientAndAuth struct {
-	Auth   runtime.ClientAuthInfoWriter
-	Client *apiclient.SEMPSolaceElementManagementProtocol
-}
-
 // loadAndValidate validates the config provided and fully prepares the Config for use by
 // the solace provider. This includes instantiating any API clients.
 func (c *Config) loadAndValidate() error {
