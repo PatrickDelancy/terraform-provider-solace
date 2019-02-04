@@ -64,16 +64,19 @@ resource "solace_aclprofile_subscribeexception" "my-sub-mqtt-allow" {
 resource "solace_clientprofile" "my-client-profile" {
     name = "ach-client-prof"
     msg_vpn = "${solace_msgvpn.my-vpn.name}"
+    allow_cut_through_forwarding = true
     allow_guaranteed_endpoint_create = true
     allow_guaranteed_msg_receive = false
     allow_guaranteed_msg_send = false
+    allow_transacted_sessions = false
 }
 
 # Client username
 resource "solace_clientusername" "my-client-name" {
     name = "ach-client-name"
+    acl = "${solace_aclprofile.my-acl.name}"
     msg_vpn = "${solace_msgvpn.my-vpn.name}"
     profile = "${solace_clientprofile.my-client-profile.name}"
-    enabled = true
+    enabled = false
     password = "ach-test"
 }
