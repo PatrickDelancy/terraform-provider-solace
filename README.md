@@ -54,6 +54,6 @@ $ $GOPATH/bin/terraform-provider-solace
 
 ## Documentation
 
-The provider very closely mirrors the SEMPv2 API, including resource and attribute names. In most cases, the name of attributes and resources is the same as in the SEMP API, with `snake_case` instead of `CamelCase`. For example `max_connection_count` instead of `MaxConnectionCount`. 
+The provider very closely mirrors the SEMPv2 API, including resource and attribute names. In most cases, the name of attributes and resources is the same as in the SEMP API, with `snake_case` instead of `CamelCase`. For example `max_connection_count` instead of `MaxConnectionCount`.
 
 See [examples/main.tf](examples/main.tf) for some usage examples.

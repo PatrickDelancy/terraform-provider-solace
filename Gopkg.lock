@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:7936f853a03338932f38fab30658bec795ddb4840ffe95cf3f16645078c693a9"
+  digest = "1:9216b78f7355512b63a3d903efa89f4464ae74644379b85dfa99849f3c0eb9ed"
   name = "github.com/ExalDraen/semp-client"
   packages = [
     "client",
@@ -14,7 +14,7 @@
     "models",
   ]
   pruneopts = "UT"
-  revision = "edeb51439e9ca689eebdd308687d3ed9a1006568"
+  revision = "92f1602dd163c64c40ec2312a2b83935665a85ef"
 
 [[projects]]
   digest = "1:d1665c44bd5db19aaee18d1b6233c99b0b9a986e8bccb24ef54747547a48027f"

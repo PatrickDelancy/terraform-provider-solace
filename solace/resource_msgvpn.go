@@ -18,73 +18,73 @@ func resourceMsgVpn() *schema.Resource {
 		Delete: resourceMsgVpnDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. Used as an identifier.",
 				Required:    true,
 				ForceNew:    true,
 			},
-			"authentication_basic_enabled": &schema.Schema{
+			"authentication_basic_enabled": {
 				Type:        schema.TypeBool,
 				Description: "Enable or disable Basic Authentication for clients connecting to the Message VPN. The default value is true.",
 				Optional:    true,
 				Default:     true,
 			},
-			"enabled": &schema.Schema{
+			"enabled": {
 				Type:        schema.TypeBool,
 				Description: "Whether or not the MSG VPN should be enabled.",
 				Optional:    true,
 				Default:     true,
 			},
-			"max_connection_count": &schema.Schema{
+			"max_connection_count": {
 				Type:        schema.TypeInt,
 				Description: "The maximum number of client connections that can be simultaneously connected to the Message VPN. This value may be higher than supported by the hardware. The default is 100.",
 				Optional:    true,
 				Default:     100,
 			},
-			"max_egress_flow_count": &schema.Schema{
+			"max_egress_flow_count": {
 				Type:        schema.TypeInt,
 				Description: "The maximum number of egress flows that can be created in the Message VPN. The default value is 1000.",
 				Optional:    true,
 				Default:     1000,
 			},
-			"max_endpoint_count": &schema.Schema{
+			"max_endpoint_count": {
 				Type:        schema.TypeInt,
 				Description: "The maximum number of Queues and Topic Endpoints that can be created in the Message VPN. The default value is 1000.",
 				Optional:    true,
 				Default:     1000,
 			},
-			"max_ingress_flow_count": &schema.Schema{
+			"max_ingress_flow_count": {
 				Type:        schema.TypeInt,
 				Description: "The maximum number of ingress flows that can be created in the Message VPN. The default value is 1000.",
 				Optional:    true,
 				Default:     1000,
 			},
-			"max_spool_usage": &schema.Schema{
+			"max_spool_usage": {
 				Type:        schema.TypeInt,
 				Description: "The maximum Message Spool usage by the Message VPN, in megabytes. The default value is 0.",
 				Optional:    true,
 				Default:     0,
 			},
-			"max_subscription_count": &schema.Schema{
+			"max_subscription_count": {
 				Type:        schema.TypeInt,
 				Description: "The maximum number of local client subscriptions (both primary and backup) that can be added to the Message VPN. The default is 500000.",
 				Optional:    true,
 				Default:     500000,
 			},
-			"max_transacted_session_count": &schema.Schema{
+			"max_transacted_session_count": {
 				Type:        schema.TypeInt,
 				Description: "The maximum number of transacted sessions for the Message VPN. The default varies by platform. The default is 1000.",
 				Optional:    true,
 				Default:     1000,
 			},
-			"max_transaction_count": &schema.Schema{
+			"max_transaction_count": {
 				Type:        schema.TypeInt,
 				Description: "The maximum number of transactions for the Message VPN. The default varies by platform. The default is 5000.",
 				Optional:    true,
 				Default:     5000,
 			},
-			"replication_enabled": &schema.Schema{
+			"replication_enabled": {
 				Type:        schema.TypeBool,
 				Description: "Enable or disable the Replication feature for the Message VPN. The default value is false.",
 				Optional:    true,

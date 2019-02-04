@@ -19,7 +19,7 @@ func resourceClientUsername() *schema.Resource {
 		Delete: resourceClientUsernameDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:        schema.TypeString,
 				Description: "The name of the Client. Used as a unique identifier.",
 				Required:    true,
@@ -27,29 +27,29 @@ func resourceClientUsername() *schema.Resource {
 			},
 			// Each Client username must belong to a VPN, but optionally we use the provider set default,
 			// and bail if neither is set. Thus the parameter is optional.
-			"msg_vpn": &schema.Schema{
+			"msg_vpn": {
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. If unset the provider default is used.",
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
 			},
-			"enabled": &schema.Schema{
+			"enabled": {
 				Type:        schema.TypeBool,
 				Description: "Enables or disables the Client Username. When disabled all clients currently connected as the Client Username are disconnected.",
 				Optional:    true,
 			},
-			"acl": &schema.Schema{
+			"acl": {
 				Type:        schema.TypeString,
 				Description: "The ACL Profile of the Client Username. The default value is \"default\".",
 				Optional:    true,
 			},
-			"password": &schema.Schema{
+			"password": {
 				Type:        schema.TypeString,
 				Description: "The password of this Client Username for internal Authentication. The default is to have no password.",
 				Optional:    true,
 			},
-			"profile": &schema.Schema{
+			"profile": {
 				Type:        schema.TypeString,
 				Description: "The Client Profile of the Client Username. The default value is \"default\".",
 				Optional:    true,
@@ -82,13 +82,15 @@ func resourceClientUsernameCreate(d *schema.ResourceData, m interface{}) error {
 	}
 	// Only set these if they're actually set (not their default value)
 	if v, ok := d.GetOk("enabled"); ok {
-		user.Enabled = v.(bool)
+		val := v.(bool)
+		user.Enabled = &val
 	}
 	if v, ok := d.GetOk("acl"); ok {
 		user.ACLProfileName = v.(string)
 	}
 	if v, ok := d.GetOk("password"); ok {
-		user.Password = v.(string)
+		val := v.(string)
+		user.Password = &val
 	}
 	if v, ok := d.GetOk("profile"); ok {
 		user.ClientProfileName = v.(string)
@@ -160,13 +162,15 @@ func resourceClientUsernameUpdate(d *schema.ResourceData, m interface{}) error {
 
 	// Only include changed values; anything we don't specify does not get updated
 	if d.HasChange("enabled") {
-		user.Enabled = d.Get("enabled").(bool)
+		val := d.Get("enabled").(bool)
+		user.Enabled = &val
 	}
 	if d.HasChange("acl") {
 		user.ACLProfileName = d.Get("acl").(string)
 	}
 	if d.HasChange("password") {
-		user.Password = d.Get("password").(string)
+		val := d.Get("password").(string)
+		user.Password = &val
 	}
 	if d.HasChange("profile") {
 		user.ClientProfileName = d.Get("profile").(string)

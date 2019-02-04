@@ -9,7 +9,7 @@ import (
 
 	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
-) 
+)
 
 func resourceACLClientConnException() *schema.Resource {
 	return &schema.Resource{
@@ -18,13 +18,13 @@ func resourceACLClientConnException() *schema.Resource {
 		Delete: resourceACLClientConnExceptionDelete,
 
 		Schema: map[string]*schema.Schema{
-			"address": &schema.Schema{
+			"address": {
 				Type:        schema.TypeString,
 				Description: "The IP Address/Netmask of the Client Connect Exception in the Classless Inter-Domain Routing (CIDR) form. Used as an identifier.",
 				Required:    true,
 				ForceNew:    true,
 			},
-			"acl": &schema.Schema{
+			"acl": {
 				Type:        schema.TypeString,
 				Description: "The name of the ACL Profile.",
 				Required:    true,
@@ -32,7 +32,7 @@ func resourceACLClientConnException() *schema.Resource {
 			},
 			// Each ACL client conn exception must belong to a VPN, but optionally we use the provider set default,
 			// and bail if neither is set. Thus the parameter is optional.
-			"msg_vpn": &schema.Schema{
+			"msg_vpn": {
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. If unset the provider default is used.",
 				Optional:    true,
@@ -112,7 +112,7 @@ func resourceACLClientConnExceptionRead(d *schema.ResourceData, m interface{}) e
 	d.Set("msg_vpn", resp.Payload.Data.MsgVpnName)
 
 	return nil
-} 
+}
 
 func resourceACLClientConnExceptionDelete(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[DEBUG] Deleting ACL Profile client exception %q ...", d.Id())

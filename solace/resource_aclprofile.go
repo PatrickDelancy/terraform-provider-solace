@@ -20,7 +20,7 @@ func resourceACLProfile() *schema.Resource {
 		Delete: resourceACLProfileDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:        schema.TypeString,
 				Description: "The name of the ACL profile. Used as a unique identifier.",
 				Required:    true,
@@ -28,26 +28,26 @@ func resourceACLProfile() *schema.Resource {
 			},
 			// Each ACL must belong to a VPN, but optionally we use the provider set default,
 			// and bail if neither is set. Thus the parameter is optional.
-			"msg_vpn": &schema.Schema{
+			"msg_vpn": {
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. If unset the provider default is used.",
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
 			},
-			"client_connection_default_action": &schema.Schema{
+			"client_connection_default_action": {
 				Type:         schema.TypeString,
 				Description:  "The default action when a Client connects to the Message VPN. Must be one of \"allow\" or \"disallow\"",
 				Optional:     true,
 				ValidateFunc: validation.StringInSlice([]string{"allow", "disallow"}, false),
 			},
-			"publish_topic_default_action": &schema.Schema{
+			"publish_topic_default_action": {
 				Type:         schema.TypeString,
 				Description:  "The default action to take when a Client publishes to a Topic in the Message VPN. Must be one of \"allow\" or \"disallow\"",
 				Optional:     true,
 				ValidateFunc: validation.StringInSlice([]string{"allow", "disallow"}, false),
 			},
-			"subscribe_topic_default_action": &schema.Schema{
+			"subscribe_topic_default_action": {
 				Type:         schema.TypeString,
 				Description:  "The default action to take when a Client subscribes to a Topic in the Message VPN. Must be one of \"allow\" or \"disallow\"",
 				Optional:     true,

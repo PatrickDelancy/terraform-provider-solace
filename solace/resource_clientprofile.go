@@ -19,7 +19,7 @@ func resourceClientProfile() *schema.Resource {
 		Delete: resourceClientProfileDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:        schema.TypeString,
 				Description: "The name of the Client profile. Used as a unique identifier.",
 				Required:    true,
@@ -27,34 +27,34 @@ func resourceClientProfile() *schema.Resource {
 			},
 			// Each Client profile must belong to a VPN, but optionally we use the provider set default,
 			// and bail if neither is set. Thus the parameter is optional.
-			"msg_vpn": &schema.Schema{
+			"msg_vpn": {
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. If unset the provider default is used.",
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
 			},
-			"allow_cut_through_forwarding": &schema.Schema{
+			"allow_cut_through_forwarding": {
 				Type:        schema.TypeBool,
 				Description: "Allow or deny clients to bind to topic endpoints or queues with the cut-through delivery mode. Changing this setting does not affect existing client connections",
 				Optional:    true,
 			},
-			"allow_guaranteed_endpoint_create": &schema.Schema{
+			"allow_guaranteed_endpoint_create": {
 				Type:        schema.TypeBool,
 				Description: "Allow or deny clients to create topic endponts or queues. Changing this setting does not affect existing client connections.",
 				Optional:    true,
 			},
-			"allow_guaranteed_msg_receive": &schema.Schema{
+			"allow_guaranteed_msg_receive": {
 				Type:        schema.TypeBool,
 				Description: "Allow or deny clients to receive guaranteed messages. Changing this setting does not affect existing client connections",
 				Optional:    true,
 			},
-			"allow_guaranteed_msg_send": &schema.Schema{
+			"allow_guaranteed_msg_send": {
 				Type:        schema.TypeBool,
 				Description: "Allow or deny clients to send guaranteed messages. Changing this setting does not affect existing client connections.",
 				Optional:    true,
 			},
-			"allow_transacted_sessions": &schema.Schema{
+			"allow_transacted_sessions": {
 				Type:        schema.TypeBool,
 				Description: "Allow or deny clients to establish transacted sessions. Changing this setting does not affect existing client connections.",
 				Optional:    true,
@@ -87,19 +87,24 @@ func resourceClientProfileCreate(d *schema.ResourceData, m interface{}) error {
 	}
 	// Only set these if they're actually set (not their default value)
 	if v, ok := d.GetOk("allow_cut_through_forwarding"); ok {
-		acl.AllowCutThroughForwardingEnabled = v.(bool)
+		val := v.(bool)
+		acl.AllowCutThroughForwardingEnabled = &val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_endpoint_create"); ok {
-		acl.AllowGuaranteedEndpointCreateEnabled = v.(bool)
+		val := v.(bool)
+		acl.AllowGuaranteedEndpointCreateEnabled = &val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_msg_receive"); ok {
-		acl.AllowGuaranteedMsgReceiveEnabled = v.(bool)
+		val := v.(bool)
+		acl.AllowGuaranteedMsgReceiveEnabled = &val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_msg_send"); ok {
-		acl.AllowGuaranteedMsgSendEnabled = v.(bool)
+		val := v.(bool)
+		acl.AllowGuaranteedMsgSendEnabled = &val
 	}
 	if v, ok := d.GetOk("allow_transacted_sessions"); ok {
-		acl.AllowTransactedSessionsEnabled = v.(bool)
+		val := v.(bool)
+		acl.AllowTransactedSessionsEnabled = &val
 	}
 
 	params := operations.NewCreateMsgVpnClientProfileParams()
@@ -169,19 +174,24 @@ func resourceClientProfileUpdate(d *schema.ResourceData, m interface{}) error {
 
 	// Only include changed values; anything we don't specify does not get updated
 	if d.HasChange("allow_cut_through_forwarding") {
-		acl.AllowCutThroughForwardingEnabled = d.Get("allow_cut_through_forwarding").(bool)
+		val := d.Get("allow_cut_through_forwarding").(bool)
+		acl.AllowCutThroughForwardingEnabled = &val
 	}
 	if d.HasChange("allow_guaranteed_endpoint_create") {
-		acl.AllowGuaranteedEndpointCreateEnabled = d.Get("allow_guaranteed_endpoint_create").(bool)
+		val := d.Get("allow_guaranteed_endpoint_create").(bool)
+		acl.AllowGuaranteedEndpointCreateEnabled = &val
 	}
 	if d.HasChange("allow_guaranteed_msg_receive") {
-		acl.AllowGuaranteedMsgReceiveEnabled = d.Get("allow_guaranteed_msg_receive").(bool)
+		val := d.Get("allow_guaranteed_msg_receive").(bool)
+		acl.AllowGuaranteedMsgReceiveEnabled = &val
 	}
 	if d.HasChange("allow_guaranteed_msg_send") {
-		acl.AllowGuaranteedMsgSendEnabled = d.Get("allow_guaranteed_msg_send").(bool)
+		val := d.Get("allow_guaranteed_msg_send").(bool)
+		acl.AllowGuaranteedMsgSendEnabled = &val
 	}
 	if d.HasChange("allow_transacted_sessions") {
-		acl.AllowTransactedSessionsEnabled = d.Get("allow_transacted_sessions").(bool)
+		val := d.Get("allow_transacted_sessions").(bool)
+		acl.AllowTransactedSessionsEnabled = &val
 	}
 	params.Body = &acl
 

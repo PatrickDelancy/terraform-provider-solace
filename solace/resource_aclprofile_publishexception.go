@@ -2,7 +2,7 @@ package solace
 
 import (
 	"fmt"
-	"log" 
+	"log"
 	"strings"
 
 	"github.com/ExalDraen/semp-client/models"
@@ -18,19 +18,19 @@ func resourceACLPublishException() *schema.Resource {
 		Delete: resourceACLPublishExceptionDelete,
 
 		Schema: map[string]*schema.Schema{
-			"topic": &schema.Schema{
+			"topic": {
 				Type:        schema.TypeString,
 				Description: "The name of the Topic for the Exception to the default action taken. May include wildcard characters.",
 				Required:    true,
 				ForceNew:    true,
 			},
-			"topic_syntax": &schema.Schema{
+			"topic_syntax": {
 				Type:        schema.TypeString,
 				Description: "The syntax of the Topic for the Exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
 				Required:    true,
 				ForceNew:    true,
 			},
-			"acl": &schema.Schema{
+			"acl": {
 				Type:        schema.TypeString,
 				Description: "The name of the ACL Profile.",
 				Required:    true,
@@ -38,7 +38,7 @@ func resourceACLPublishException() *schema.Resource {
 			},
 			// Each ACL client conn exception must belong to a VPN, but optionally we use the provider set default,
 			// and bail if neither is set. Thus the parameter is optional.
-			"msg_vpn": &schema.Schema{
+			"msg_vpn": {
 				Type:        schema.TypeString,
 				Description: "The name of the MSG VPN. If unset the provider default is used.",
 				Optional:    true,

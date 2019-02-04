@@ -31,6 +31,7 @@ check: ## Run the gometalinter suite
 			--aggregate \
 			--disable-all \
 			--enable golint \
+			--enable gofmt \
 			--enable-gc \
 			--enable misspell \
 			--enable vet \
