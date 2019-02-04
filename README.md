@@ -1,45 +1,43 @@
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="400px">
-
 # terraform-provider-solace
-[![Build Status](https://travis-ci.org/ExalDraen/terraform-provider-solace.svg?branch=master)](https://travis-ci.org/ExalDraen/terraform-provider-solace)
 
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
+[![Build Status](https://travis-ci.org/ExalDraen/terraform-provider-solace.svg?branch=master)](https://travis-ci.org/ExalDraen/terraform-provider-solace)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ExalDraen/terraform-provider-solace)](https://goreportcard.com/report/github.com/ExalDraen/terraform-provider-solace)
+[![GoDoc](https://godoc.org/github.com/ExalDraen/terraform-provider-solace/solace?status.svg)](https://godoc.org/github.com/ExalDraen/terraform-provider-solace/solace)
+
+<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="300px" />
+<img src="https://3yecy51kdipx3blyi37oute1-wpengine.netdna-ssl.com/wp-content/uploads/2018/05/Solace_Logo_Green_360x100-1.png" width="300px" />
+
+## Table of Contents
 
 - [terraform-provider-solace](#terraform-provider-solace)
-    - [Using A Binary Package](#using-a-binary-package)
-    - [Building The Provider From Source](#building-the-provider-from-source)
-    - [Developing the Provider](#developing-the-provider)
-    - [Documentation](#documentation)
+  - [Using A Binary Package](#using-a-binary-package)
+  - [Building The Provider From Source](#building-the-provider-from-source)
+  - [Developing the Provider](#developing-the-provider)
+  - [Documentation](#documentation)
 
-<!-- markdown-toc end -->
+[Terraform](https://www.terraform.io) provider plugin for managing [Solace](https://solace.com/) appliances using the [Solace SEMP v2 API](https://docs.solace.com/SEMP/Using-SEMP.htm).
 
+## Using the Binary Packages
 
-[Terraform](https://www.terraform.io) provider plugin for managing Solace appliances using the [Solace SEMP v2 API](https://docs.solace.com/SEMP/Using-SEMP.htm).
+Download the [release binary](https://github.com/ExalDraen/terraform-provider-solace/releases) from and copy it to the `$HOME/terraform.d/plugins/<os>_<arch>/terraform-provider-solace` as explained in the [terraform docs](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
 
-**Work in Progress !**
-
-## Using A Binary Package
-
-Download the release binary and copy it to the `$HOME/terraform.d/plugins/<os>_<arch>/terraform-provider-solace` as explain in the [terraform docs](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
-For example `/home/youruser/terraform.d/plugins/linux_amd64/terraform-provider-solace` for a Linux environment or `/Users/youruser/terraform.d/plugins/darwin_amd64/terraform-provider-solace` for a MacOS environment.
+For example, in a Linux environment you would copy it to `/home/youruser/terraform.d/plugins/linux_amd64/terraform-provider-solace`, for a MacOS environment to `/Users/youruser/terraform.d/plugins/darwin_amd64/terraform-provider-solace`.
 
 ## Building The Provider From Source
 
 Clone repository to: `$GOPATH/src/github.com/ExalDraen/terraform-provider-solace`
 
 ```sh
-$ mkdir -p $GOPATH/src/github.com/ExalDraen; cd $GOPATH/src/github.com/ExalDraen
-$ git clone git@github.com:ExalDraen/terraform-provider-solace
+mkdir -p $GOPATH/src/github.com/ExalDraen; cd $GOPATH/src/github.com/ExalDraen
+git clone git@github.com:ExalDraen/terraform-provider-solace
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/ExalDraen/terraform-provider-solace
-$ make
+cd $GOPATH/src/github.com/ExalDraen/terraform-provider-solace
+make
 ```
-
 
 ## Developing the Provider
 
@@ -55,4 +53,7 @@ $ $GOPATH/bin/terraform-provider-solace
 ```
 
 ## Documentation
-TODO
+
+The provider very closely mirrors the SEMPv2 API, including resource and attribute names. In most cases, the name of attributes and resources is the same as in the SEMP API, with `snake_case` instead of `CamelCase`. For example `max_connection_count` instead of `MaxConnectionCount`. 
+
+See [examples/main.tf](examples/main.tf) for some usage examples.
