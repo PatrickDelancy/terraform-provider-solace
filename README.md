@@ -57,3 +57,19 @@ $ $GOPATH/bin/terraform-provider-solace
 The provider very closely mirrors the SEMPv2 API, including resource and attribute names. In most cases, the name of attributes and resources is the same as in the SEMP API, with `snake_case` instead of `CamelCase`. For example `max_connection_count` instead of `MaxConnectionCount`.
 
 See [examples/main.tf](examples/main.tf) for some usage examples.
+
+## Configuration
+
+The provider may be configured using terraform as normal, e.g. 
+
+```hcl
+provider "solace" {
+    host = "localhost:8080"
+    base_path = "/SEMP/v2/config"
+    user = "admin"
+    password = "alex"
+    msg_vpn = "go-tf-1"
+}
+```
+
+or using the corresponding `SOLACE_*` environment variables. Check `provider.go` to see which variables are available.

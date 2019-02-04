@@ -29,13 +29,13 @@ func Provider() *schema.Provider {
 			"base_path": {
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("SOLACE_BASE_PATH", ""),
+				DefaultFunc: schema.EnvDefaultFunc("SOLACE_BASE_PATH", "/SEMP/v2/config"),
 				Description: descriptions["base_path"],
 			},
 			"msg_vpn": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("SOLACE_MGS_VPN", ""),
+				DefaultFunc: schema.EnvDefaultFunc("SOLACE_MSG_VPN", ""),
 				Description: descriptions["msg_vpn"],
 			},
 		},
