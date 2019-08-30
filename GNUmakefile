@@ -3,8 +3,6 @@ default: check test build
 tools: ## Install the tools used to test and build
 	@echo "==> Installing build tools"
 	GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-	go get github.com/goreleaser/goreleaser
-	go get -u github.com/golang/dep/cmd/dep
 
 build: ## Build for development purposes
 	@echo "==> Running $@..."
@@ -22,12 +20,12 @@ testacc: ## Run the acceptance test suite with coverage
 
 release: ## Trigger the release build script
 	@echo "==> Running $@..."
-	@goreleaser --rm-dist --config=goreleaser.yml
+	@bash <(curl -sL https://git.io/goreleaser) --rm-dist --config=goreleaser.yml
 
 .PHONY: check
 check: ## Run the gometalinter suite
 	@echo "==> Running $@..."
-	dep ensure
+	go get .
 	golangci-lint run
 
 HELP_FORMAT="    \033[36m%-25s\033[0m %s\n"

@@ -51,7 +51,3 @@ release:
   github:
     owner: ExalDraen
     name: terraform-provider-solace
-
-before:
- hooks:
- - dep ensure
