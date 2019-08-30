@@ -25,7 +25,6 @@ release: ## Trigger the release build script
 .PHONY: check
 check: ## Run the gometalinter suite
 	@echo "==> Running $@..."
-	go get .
 	golangci-lint run
 
 HELP_FORMAT="    \033[36m%-25s\033[0m %s\n"
