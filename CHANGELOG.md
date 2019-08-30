@@ -11,12 +11,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+### Changed
+
+## 0.1.0
+
+### Known Issues
+
+### Added
+
 * Added basic acceptance test for `solace_msgvpn`. Does not yet run on CI.
 
 ### Changed
 
 * Remove unused `ClientAndAuth` struct.
-* Update the terraform helper dependency to `0.12.7`. This means the provider now requires Terraform > 0.12. 
+* Update the terraform helper dependency to `0.12.7`. This means the provider now requires Terraform > 0.12.
 
 ## 0.0.2
 
