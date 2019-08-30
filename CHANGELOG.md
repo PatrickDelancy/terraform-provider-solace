@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Remove unused `ClientAndAuth` struct.
+* Update the terraform helper dependency to `0.12.7`. This means the provider now requires Terraform > 0.12. 
 
 ## 0.0.2
 
