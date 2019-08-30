@@ -2,10 +2,9 @@ default: check test build
 
 tools: ## Install the tools used to test and build
 	@echo "==> Installing build tools"
-	go get github.com/alecthomas/gometalinter
+	GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 	go get github.com/goreleaser/goreleaser
 	go get -u github.com/golang/dep/cmd/dep
-	gometalinter --install
 
 build: ## Build for development purposes
 	@echo "==> Running $@..."
@@ -29,24 +28,7 @@ release: ## Trigger the release build script
 check: ## Run the gometalinter suite
 	@echo "==> Running $@..."
 	dep ensure
-	gometalinter \
-			--deadline 10m \
-			--vendor \
-			--sort="path" \
-			--aggregate \
-			--disable-all \
-			--enable golint \
-			--enable gofmt \
-			--enable-gc \
-			--enable misspell \
-			--enable vet \
-			--enable deadcode \
-			--enable varcheck \
-			--enable ineffassign \
-			--enable structcheck \
-			--enable staticcheck \
-			--enable unconvert \
-			./...
+	golangci-lint run
 
 HELP_FORMAT="    \033[36m%-25s\033[0m %s\n"
 .PHONY: help

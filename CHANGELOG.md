@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Switch to [Go modules](https://github.com/golang/go/wiki/Modules) for dependencies.
+
 ## 0.1.0
 
 ### Known Issues
