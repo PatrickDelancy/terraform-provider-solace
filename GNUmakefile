@@ -20,10 +20,6 @@ testacc: ## Run the acceptance test suite with coverage
 	@TF_ACC=1 go test -cover -v -tags "$(BUILDTAGS)" \
 		-race $(shell go list ./... | grep -v vendor)
 
-release: ## Trigger the release build script
-	@echo "==> Running $@..."
-	@bash <(curl -sL https://git.io/goreleaser) --rm-dist --config=goreleaser.yml
-
 .PHONY: check
 check: ## Run the linting suite
 	@echo "==> Running $@..."
