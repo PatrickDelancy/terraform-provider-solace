@@ -1,4 +1,4 @@
-GOPROXY=https://proxy.golang.org
+PKG_NAME=solace
 
 default: check test build
 
@@ -25,10 +25,9 @@ release: ## Trigger the release build script
 	@bash <(curl -sL https://git.io/goreleaser) --rm-dist --config=goreleaser.yml
 
 .PHONY: check
-check: ## Run the gometalinter suite
+check: ## Run the linting suite
 	@echo "==> Running $@..."
-	go get .
-	golangci-lint run
+	@golangci-lint run ./$(PKG_NAME)
 
 HELP_FORMAT="    \033[36m%-25s\033[0m %s\n"
 .PHONY: help
