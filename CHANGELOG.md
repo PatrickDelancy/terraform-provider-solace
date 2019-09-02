@@ -13,13 +13,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 0.1.1
+
+### Changed
+
 * Switch to [Go modules](https://github.com/golang/go/wiki/Modules) for dependencies
 * Vendor dependencies to avoid issues with missing dependencies at build time.
 * Switch to Go `1.11.x` in TravisCI
 
 ## 0.1.0
-
-### Known Issues
 
 ### Added
 
