@@ -1,3 +1,5 @@
+GOPROXY=https://proxy.golang.org
+
 default: check test build
 
 tools: ## Install the tools used to test and build
