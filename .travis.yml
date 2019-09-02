@@ -5,7 +5,7 @@ go:
   - "1.11.x"
 env:
   - GO111MODULE=on
-  - GOFLAGS=-mod=vendor
+    GOFLAGS=-mod=vendor
 install:
   - make tools
 script:
