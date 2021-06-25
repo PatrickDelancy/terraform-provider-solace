@@ -2,7 +2,7 @@ sudo: false
 dist: trusty
 language: go
 go:
-  - "1.11.x"
+  - "1.16.x"
 env:
   - GO111MODULE=on
     GOFLAGS=-mod=vendor
