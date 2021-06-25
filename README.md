@@ -1,11 +1,8 @@
 # terraform-provider-solace
 
-[![Build Status](https://travis-ci.org/ExalDraen/terraform-provider-solace.svg?branch=master)](https://travis-ci.org/ExalDraen/terraform-provider-solace)
-[![Go Report Card](https://goreportcard.com/badge/github.com/ExalDraen/terraform-provider-solace)](https://goreportcard.com/report/github.com/ExalDraen/terraform-provider-solace)
-[![GoDoc](https://godoc.org/github.com/ExalDraen/terraform-provider-solace/solace?status.svg)](https://godoc.org/github.com/ExalDraen/terraform-provider-solace/solace)
-
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="300px" />
-<img src="https://3yecy51kdipx3blyi37oute1-wpengine.netdna-ssl.com/wp-content/uploads/2018/05/Solace_Logo_Green_360x100-1.png" width="300px" />
+[//]: # "[![Build Status](https://travis-ci.org/PatrickDelancy/terraform-provider-solace.svg?branch=master)](https://travis-ci.org/PatrickDelancy/terraform-provider-solace)"
+[//]: # "[![Go Report Card](https://goreportcard.com/badge/github.com/PatrickDelancy/terraform-provider-solace)](https://goreportcard.com/report/github.com/PatrickDelancy/terraform-provider-solace)"
+[//]: # "[![GoDoc](https://godoc.org/github.com/PatrickDelancy/terraform-provider-solace/solace?status.svg)](https://godoc.org/github.com/PatrickDelancy/terraform-provider-solace/solace)"
 
 ## Table of Contents
 
@@ -19,23 +16,23 @@
 
 ## Using the Binary Packages
 
-Download the [release binary](https://github.com/ExalDraen/terraform-provider-solace/releases) from and copy it to `$HOME/terraform.d/plugins/<os>_<arch>/terraform-provider-solace` as explained in the [terraform docs](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
+Download the [release binary](https://github.com/PatrickDelancy/terraform-provider-solace/releases) from and copy it to `$HOME/terraform.d/plugins/<os>_<arch>/terraform-provider-solace` as explained in the [terraform docs](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
 
 For example, in a Linux environment you would copy it to `/home/youruser/terraform.d/plugins/linux_amd64/terraform-provider-solace`, for a MacOS environment to `/Users/youruser/terraform.d/plugins/darwin_amd64/terraform-provider-solace`.
 
 ## Building The Provider From Source
 
-Clone repository to: `$GOPATH/src/github.com/ExalDraen/terraform-provider-solace`
+Clone repository to: `$GOPATH/src/github.com/PatrickDelancy/terraform-provider-solace`
 
 ```sh
-mkdir -p $GOPATH/src/github.com/ExalDraen; cd $GOPATH/src/github.com/ExalDraen
-git clone git@github.com:ExalDraen/terraform-provider-solace
+mkdir -p $GOPATH/src/github.com/PatrickDelancy; cd $GOPATH/src/github.com/PatrickDelancy
+git clone git@github.com:PatrickDelancy/terraform-provider-solace
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-cd $GOPATH/src/github.com/ExalDraen/terraform-provider-solace
+cd $GOPATH/src/github.com/PatrickDelancy/terraform-provider-solace
 make
 ```
 

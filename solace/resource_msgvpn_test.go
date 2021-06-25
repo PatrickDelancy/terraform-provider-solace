@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/ExalDraen/semp-client/client/msg_vpn"
-
+	"github.com/PatrickDelancy/semp-client/client/all"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -52,10 +51,10 @@ func testCheckMsgVpnExists(resourceName string) resource.TestCheckFunc {
 		}
 
 		name := rs.Primary.Attributes["name"]
-		params := msg_vpn.NewGetMsgVpnParams()
+		params := all.NewGetMsgVpnParams()
 		params.MsgVpnName = name
 
-		resp, err := c.Client.MsgVpn.GetMsgVpn(params, c.Auth)
+		resp, err := c.Client.All.GetMsgVpn(params, c.Auth)
 
 		if err != nil {
 			return fmt.Errorf("Bad: Get on msg vpn: %+v", err)
@@ -78,10 +77,10 @@ func testCheckMsgVpnDestroy(s *terraform.State) error {
 		}
 
 		name := rs.Primary.Attributes["name"]
-		params := msg_vpn.NewGetMsgVpnParams()
+		params := all.NewGetMsgVpnParams()
 		params.MsgVpnName = name
 
-		resp, err := c.Client.MsgVpn.GetMsgVpn(params, c.Auth)
+		resp, err := c.Client.All.GetMsgVpn(params, c.Auth)
 
 		// don't fail test on account of our inability to read the resource
 		if err != nil {

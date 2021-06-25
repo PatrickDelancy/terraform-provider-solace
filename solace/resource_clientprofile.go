@@ -5,9 +5,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ExalDraen/semp-client/models"
+	"github.com/PatrickDelancy/semp-client/client/all"
+	"github.com/PatrickDelancy/semp-client/models"
 
-	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -88,32 +88,32 @@ func resourceClientProfileCreate(d *schema.ResourceData, m interface{}) error {
 	// Only set these if they're actually set (not their default value)
 	if v, ok := d.GetOk("allow_cut_through_forwarding"); ok {
 		val := v.(bool)
-		acl.AllowCutThroughForwardingEnabled = &val
+		acl.AllowCutThroughForwardingEnabled = val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_endpoint_create"); ok {
 		val := v.(bool)
-		acl.AllowGuaranteedEndpointCreateEnabled = &val
+		acl.AllowGuaranteedEndpointCreateEnabled = val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_msg_receive"); ok {
 		val := v.(bool)
-		acl.AllowGuaranteedMsgReceiveEnabled = &val
+		acl.AllowGuaranteedMsgReceiveEnabled = val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_msg_send"); ok {
 		val := v.(bool)
-		acl.AllowGuaranteedMsgSendEnabled = &val
+		acl.AllowGuaranteedMsgSendEnabled = val
 	}
 	if v, ok := d.GetOk("allow_transacted_sessions"); ok {
 		val := v.(bool)
-		acl.AllowTransactedSessionsEnabled = &val
+		acl.AllowTransactedSessionsEnabled = val
 	}
 
-	params := operations.NewCreateMsgVpnClientProfileParams()
+	params := all.NewCreateMsgVpnClientProfileParams()
 	params.MsgVpnName = vpn
 	params.Body = &acl
 
-	resp, err := client.Operations.CreateMsgVpnClientProfile(params, auth)
+	resp, err := client.All.CreateMsgVpnClientProfile(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.CreateMsgVpnClientProfileDefault).Payload.Meta.Error
+		sempErr := err.(*all.CreateMsgVpnClientProfileDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to create Client profile %q on vpn %q: %v", name, vpn, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.ClientProfileName)
@@ -127,7 +127,7 @@ func resourceClientProfileRead(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewGetMsgVpnClientProfileParams()
+	params := all.NewGetMsgVpnClientProfileParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -137,7 +137,7 @@ func resourceClientProfileRead(d *schema.ResourceData, m interface{}) error {
 	params.ClientProfileName = d.Id()
 	params.MsgVpnName = vpn
 
-	resp, err := client.Operations.GetMsgVpnClientProfile(params, auth)
+	resp, err := client.All.GetMsgVpnClientProfile(params, auth)
 	if err != nil {
 		log.Printf("[WARN] No Client profile found: %s", d.Id())
 		d.SetId("")
@@ -160,7 +160,7 @@ func resourceClientProfileUpdate(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewUpdateMsgVpnClientProfileParams()
+	params := all.NewUpdateMsgVpnClientProfileParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -175,29 +175,29 @@ func resourceClientProfileUpdate(d *schema.ResourceData, m interface{}) error {
 	// Only include changed values; anything we don't specify does not get updated
 	if d.HasChange("allow_cut_through_forwarding") {
 		val := d.Get("allow_cut_through_forwarding").(bool)
-		acl.AllowCutThroughForwardingEnabled = &val
+		acl.AllowCutThroughForwardingEnabled = val
 	}
 	if d.HasChange("allow_guaranteed_endpoint_create") {
 		val := d.Get("allow_guaranteed_endpoint_create").(bool)
-		acl.AllowGuaranteedEndpointCreateEnabled = &val
+		acl.AllowGuaranteedEndpointCreateEnabled = val
 	}
 	if d.HasChange("allow_guaranteed_msg_receive") {
 		val := d.Get("allow_guaranteed_msg_receive").(bool)
-		acl.AllowGuaranteedMsgReceiveEnabled = &val
+		acl.AllowGuaranteedMsgReceiveEnabled = val
 	}
 	if d.HasChange("allow_guaranteed_msg_send") {
 		val := d.Get("allow_guaranteed_msg_send").(bool)
-		acl.AllowGuaranteedMsgSendEnabled = &val
+		acl.AllowGuaranteedMsgSendEnabled = val
 	}
 	if d.HasChange("allow_transacted_sessions") {
 		val := d.Get("allow_transacted_sessions").(bool)
-		acl.AllowTransactedSessionsEnabled = &val
+		acl.AllowTransactedSessionsEnabled = val
 	}
 	params.Body = &acl
 
-	_, err = client.Operations.UpdateMsgVpnClientProfile(params, auth)
+	_, err = client.All.UpdateMsgVpnClientProfile(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.UpdateMsgVpnClientProfileDefault).Payload.Meta.Error
+		sempErr := err.(*all.UpdateMsgVpnClientProfileDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to update Client profile %q: %v", params.ClientProfileName, formatError(sempErr))
 	}
 
@@ -208,7 +208,7 @@ func resourceClientProfileDelete(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewDeleteMsgVpnClientProfileParams()
+	params := all.NewDeleteMsgVpnClientProfileParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -217,9 +217,9 @@ func resourceClientProfileDelete(d *schema.ResourceData, m interface{}) error {
 	params.ClientProfileName = d.Id()
 	params.MsgVpnName = vpn
 
-	_, err = client.Operations.DeleteMsgVpnClientProfile(params, auth)
+	_, err = client.All.DeleteMsgVpnClientProfile(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.DeleteMsgVpnClientProfileDefault).Payload.Meta.Error
+		sempErr := err.(*all.DeleteMsgVpnClientProfileDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to delete Client profile %q: %v", params.MsgVpnName, formatError(sempErr))
 	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but

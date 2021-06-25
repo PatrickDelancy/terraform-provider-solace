@@ -5,9 +5,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ExalDraen/semp-client/models"
+	"github.com/PatrickDelancy/semp-client/client/all"
+	"github.com/PatrickDelancy/semp-client/models"
 
-	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -68,14 +68,14 @@ func resourceACLClientConnExceptionCreate(d *schema.ResourceData, m interface{})
 		MsgVpnName:                    vpn,
 	}
 
-	params := operations.NewCreateMsgVpnACLProfileClientConnectExceptionParams()
+	params := all.NewCreateMsgVpnACLProfileClientConnectExceptionParams()
 	params.MsgVpnName = vpn
 	params.ACLProfileName = acl
 	params.Body = &ClientConnExc
 
-	resp, err := client.Operations.CreateMsgVpnACLProfileClientConnectException(params, auth)
+	resp, err := client.All.CreateMsgVpnACLProfileClientConnectException(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.CreateMsgVpnACLProfileClientConnectExceptionDefault).Payload.Meta.Error
+		sempErr := err.(*all.CreateMsgVpnACLProfileClientConnectExceptionDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to create ACL profile client connection exception %q for ACL %q on VPN %q: %q", ClientConnExc, acl, vpn, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.ClientConnectExceptionAddress)
@@ -89,7 +89,7 @@ func resourceACLClientConnExceptionRead(d *schema.ResourceData, m interface{}) e
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewGetMsgVpnACLProfileClientConnectExceptionParams()
+	params := all.NewGetMsgVpnACLProfileClientConnectExceptionParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -100,7 +100,7 @@ func resourceACLClientConnExceptionRead(d *schema.ResourceData, m interface{}) e
 	params.ACLProfileName = d.Get("acl").(string)
 	params.MsgVpnName = vpn
 
-	resp, err := client.Operations.GetMsgVpnACLProfileClientConnectException(params, auth)
+	resp, err := client.All.GetMsgVpnACLProfileClientConnectException(params, auth)
 	if err != nil {
 		log.Printf("[WARN] No ACL profile client exception found found: %q", d.Id())
 		d.SetId("")
@@ -119,7 +119,7 @@ func resourceACLClientConnExceptionDelete(d *schema.ResourceData, m interface{})
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewDeleteMsgVpnACLProfileClientConnectExceptionParams()
+	params := all.NewDeleteMsgVpnACLProfileClientConnectExceptionParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -129,9 +129,9 @@ func resourceACLClientConnExceptionDelete(d *schema.ResourceData, m interface{})
 	params.ACLProfileName = d.Get("acl").(string)
 	params.MsgVpnName = vpn
 
-	_, err = client.Operations.DeleteMsgVpnACLProfileClientConnectException(params, auth)
+	_, err = client.All.DeleteMsgVpnACLProfileClientConnectException(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.DeleteMsgVpnACLProfileClientConnectExceptionDefault).Payload.Meta.Error
+		sempErr := err.(*all.DeleteMsgVpnACLProfileClientConnectExceptionDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to ACL profile client connection exception %q for ACL %q on VPN %q: %q",
 			params.ClientConnectExceptionAddress, params.ACLProfileName, params.MsgVpnName, formatError(sempErr))
 	}

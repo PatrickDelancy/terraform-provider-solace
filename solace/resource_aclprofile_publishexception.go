@@ -5,10 +5,11 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ExalDraen/semp-client/models"
+	"github.com/PatrickDelancy/semp-client/client/all"
+	"github.com/PatrickDelancy/semp-client/models"
 
-	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func resourceACLPublishException() *schema.Resource {
@@ -29,6 +30,7 @@ func resourceACLPublishException() *schema.Resource {
 				Description: "The syntax of the Topic for the Exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
 				Required:    true,
 				ForceNew:    true,
+				ValidateFunc: validation.StringInSlice([]string{"smf", "mqtt"}, false),
 			},
 			"acl": {
 				Type:        schema.TypeString,
@@ -69,24 +71,24 @@ func resourceACLPublishExceptionCreate(d *schema.ResourceData, m interface{}) er
 		return err
 	}
 
-	PubExc := models.MsgVpnACLProfilePublishException{
-		TopicSyntax:           syntax,
-		PublishExceptionTopic: topic,
-		ACLProfileName:        acl,
-		MsgVpnName:            vpn,
+	PubExc := models.MsgVpnACLProfilePublishTopicException{
+		PublishTopicExceptionSyntax:	syntax,
+		PublishTopicException:			topic,
+		ACLProfileName:        			acl,
+		MsgVpnName:            			vpn,
 	}
 
-	params := operations.NewCreateMsgVpnACLProfilePublishExceptionParams()
+	params := all.NewCreateMsgVpnACLProfilePublishTopicExceptionParams()
 	params.MsgVpnName = vpn
 	params.ACLProfileName = acl
 	params.Body = &PubExc
 
-	resp, err := client.Operations.CreateMsgVpnACLProfilePublishException(params, auth)
+	resp, err := client.All.CreateMsgVpnACLProfilePublishTopicException(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.CreateMsgVpnACLProfilePublishExceptionDefault).Payload.Meta.Error
+		sempErr := err.(*all.CreateMsgVpnACLProfilePublishTopicExceptionDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to create ACL profile publish exception %q for ACL %q on VPN %q: %q", PubExc, acl, vpn, formatError(sempErr))
 	}
-	d.SetId(resp.Payload.Data.PublishExceptionTopic)
+	d.SetId(resp.Payload.Data.PublishTopicException)
 
 	log.Printf("[DEBUG] Finished creating ACL profile publish exception %q on ACL %q on VPN %q", PubExc, acl, vpn)
 	return resourceACLPublishExceptionRead(d, m)
@@ -97,27 +99,27 @@ func resourceACLPublishExceptionRead(d *schema.ResourceData, m interface{}) erro
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewGetMsgVpnACLProfilePublishExceptionParams()
+	params := all.NewGetMsgVpnACLProfilePublishTopicExceptionParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
 		return err
 	}
 
-	params.PublishExceptionTopic = d.Id()
-	params.TopicSyntax = d.Get("topic_syntax").(string)
+	params.PublishTopicException = d.Id()
+	params.PublishTopicExceptionSyntax = d.Get("topic_syntax").(string)
 	params.ACLProfileName = d.Get("acl").(string)
 	params.MsgVpnName = vpn
 
-	resp, err := client.Operations.GetMsgVpnACLProfilePublishException(params, auth)
+	resp, err := client.All.GetMsgVpnACLProfilePublishTopicException(params, auth)
 	if err != nil {
 		log.Printf("[WARN] No ACL Profile publish exception found found: %q", d.Id())
 		d.SetId("")
 		return nil
 	}
 	log.Printf("%#v\n", resp.Payload.Data)
-	d.Set("topic", resp.Payload.Data.PublishExceptionTopic)
-	d.Set("topic_syntax", resp.Payload.Data.TopicSyntax)
+	d.Set("topic", resp.Payload.Data.PublishTopicException)
+	d.Set("topic_syntax", resp.Payload.Data.PublishTopicExceptionSyntax)
 	d.Set("acl", resp.Payload.Data.ACLProfileName)
 	d.Set("msg_vpn", resp.Payload.Data.MsgVpnName)
 
@@ -129,22 +131,22 @@ func resourceACLPublishExceptionDelete(d *schema.ResourceData, m interface{}) er
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewDeleteMsgVpnACLProfilePublishExceptionParams()
+	params := all.NewDeleteMsgVpnACLProfilePublishTopicExceptionParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
 		return err
 	}
-	params.PublishExceptionTopic = d.Id()
-	params.TopicSyntax = d.Get("topic_syntax").(string)
+	params.PublishTopicException = d.Id()
+	params.PublishTopicExceptionSyntax = d.Get("topic_syntax").(string)
 	params.ACLProfileName = d.Get("acl").(string)
 	params.MsgVpnName = vpn
 
-	_, err = client.Operations.DeleteMsgVpnACLProfilePublishException(params, auth)
+	_, err = client.All.DeleteMsgVpnACLProfilePublishTopicException(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.DeleteMsgVpnACLProfilePublishExceptionDefault).Payload.Meta.Error
+		sempErr := err.(*all.DeleteMsgVpnACLProfilePublishTopicExceptionDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to ACL profile publish exception exception %q for ACL %q on VPN %q: %q",
-			params.TopicSyntax, params.ACLProfileName, params.MsgVpnName, formatError(sempErr))
+			params.PublishTopicExceptionSyntax, params.ACLProfileName, params.MsgVpnName, formatError(sempErr))
 	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but
 	// it is added here for explicitness.

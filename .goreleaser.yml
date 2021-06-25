@@ -49,5 +49,5 @@ release:
   # Repo in which the release will be created.
   # Default is extracted from the origin remote URL.
   github:
-    owner: ExalDraen
+    owner: PatrickDelancy
     name: terraform-provider-solace

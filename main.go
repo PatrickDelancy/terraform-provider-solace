@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform/plugin"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/ExalDraen/terraform-provider-solace/solace"
+	"github.com/PatrickDelancy/terraform-provider-solace/solace"
 )
 
 func main() {

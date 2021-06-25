@@ -1,7 +1,7 @@
 package solace
 
 import (
-	apiclient "github.com/ExalDraen/semp-client/client"
+	apiclient "github.com/PatrickDelancy/semp-client/client"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"

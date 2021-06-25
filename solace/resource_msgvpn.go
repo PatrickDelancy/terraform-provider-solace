@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ExalDraen/semp-client/models"
+	"github.com/PatrickDelancy/semp-client/client/all"
+	"github.com/PatrickDelancy/semp-client/models"
 
-	"github.com/ExalDraen/semp-client/client/msg_vpn"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -114,55 +114,55 @@ func resourceMsgVpnCreate(d *schema.ResourceData, m interface{}) error {
 	// Only set these if they're actually set (not their default value)
 	if v, ok := d.GetOk("authentication_basic_enabled"); ok {
 		val := v.(bool)
-		vpn.AuthenticationBasicEnabled = &val
+		vpn.AuthenticationBasicEnabled = val
 	}
 	if v, ok := d.GetOk("enabled"); ok {
 		val := v.(bool)
-		vpn.Enabled = &val
+		vpn.Enabled = val
 	}
 	if v, ok := d.GetOk("replication_enabled"); ok {
 		val := v.(bool)
-		vpn.ReplicationEnabled = &val
+		vpn.ReplicationEnabled = val
 	}
 	if v, ok := d.GetOk("max_connection_count"); ok {
 		val := int64(v.(int))
-		vpn.MaxConnectionCount = &val
+		vpn.MaxConnectionCount = val
 	}
 	if v, ok := d.GetOk("max_egress_flow_count"); ok {
 		val := int64(v.(int))
-		vpn.MaxEgressFlowCount = &val
+		vpn.MaxEgressFlowCount = val
 	}
 	if v, ok := d.GetOk("max_endpoint_count"); ok {
 		val := int64(v.(int))
-		vpn.MaxEndpointCount = &val
+		vpn.MaxEndpointCount = val
 	}
 	if v, ok := d.GetOk("max_ingress_flow_count"); ok {
 		val := int64(v.(int))
-		vpn.MaxIngressFlowCount = &val
+		vpn.MaxIngressFlowCount = val
 	}
 	if v, ok := d.GetOk("max_spool_usage"); ok {
 		val := int64(v.(int))
-		vpn.MaxMsgSpoolUsage = &val
+		vpn.MaxMsgSpoolUsage = val
 	}
 	if v, ok := d.GetOk("max_subscription_count"); ok {
 		val := int64(v.(int))
-		vpn.MaxSubscriptionCount = &val
+		vpn.MaxSubscriptionCount = val
 	}
 	if v, ok := d.GetOk("max_transacted_session_count"); ok {
 		val := int64(v.(int))
-		vpn.MaxTransactedSessionCount = &val
+		vpn.MaxTransactedSessionCount = val
 	}
 	if v, ok := d.GetOk("max_transaction_count"); ok {
 		val := int64(v.(int))
-		vpn.MaxTransactionCount = &val
+		vpn.MaxTransactionCount = val
 	}
 
-	params := msg_vpn.NewCreateMsgVpnParams()
+	params := all.NewCreateMsgVpnParams()
 	params.Body = &vpn
 
-	resp, err := client.MsgVpn.CreateMsgVpn(params, auth)
+	resp, err := client.All.CreateMsgVpn(params, auth)
 	if err != nil {
-		sempErr := err.(*msg_vpn.CreateMsgVpnDefault).Payload.Meta.Error
+		sempErr := err.(*all.CreateMsgVpnDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to create message VPN %q: %v", name, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.MsgVpnName)
@@ -176,10 +176,10 @@ func resourceMsgVpnRead(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	getParams := msg_vpn.NewGetMsgVpnParams()
+	getParams := all.NewGetMsgVpnParams()
 	getParams.MsgVpnName = d.Id()
 
-	resp, err := client.MsgVpn.GetMsgVpn(getParams, auth)
+	resp, err := client.All.GetMsgVpn(getParams, auth)
 	if err != nil {
 		log.Printf("[WARN] No Server found: %s", d.Id())
 		d.SetId("")
@@ -207,62 +207,62 @@ func resourceMsgVpnUpdate(d *schema.ResourceData, m interface{}) error {
 	client := c.Client
 	auth := c.Auth
 
-	params := msg_vpn.NewUpdateMsgVpnParams()
+	params := all.NewUpdateMsgVpnParams()
 	params.MsgVpnName = d.Id()
 	newMsgVpn := models.MsgVpn{}
 
 	// Only include changed values; anything we don't specify does not get updated
 	if d.HasChange("authentication_basic_enabled") {
 		val := d.Get("authentication_basic_enabled").(bool)
-		newMsgVpn.AuthenticationBasicEnabled = &val
+		newMsgVpn.AuthenticationBasicEnabled = val
 	}
 	if d.HasChange("enabled") {
 		val := d.Get("enabled").(bool)
-		newMsgVpn.Enabled = &val
+		newMsgVpn.Enabled = val
 	}
 	if d.HasChange("max_connection_count") {
 		val := int64(d.Get("max_connection_count").(int))
-		newMsgVpn.MaxConnectionCount = &val
+		newMsgVpn.MaxConnectionCount = val
 	}
 	if d.HasChange("max_egress_flow_count") {
 		val := int64(d.Get("max_egress_flow_count").(int))
-		newMsgVpn.MaxEgressFlowCount = &val
+		newMsgVpn.MaxEgressFlowCount = val
 	}
 	if d.HasChange("max_endpoint_count") {
 		val := int64(d.Get("max_endpoint_count").(int))
-		newMsgVpn.MaxEndpointCount = &val
+		newMsgVpn.MaxEndpointCount = val
 	}
 	if d.HasChange("max_ingress_flow_count") {
 		val := int64(d.Get("max_ingress_flow_count").(int))
-		newMsgVpn.MaxIngressFlowCount = &val
+		newMsgVpn.MaxIngressFlowCount = val
 	}
 	if d.HasChange("max_spool_usage") {
 		val := int64(d.Get("max_spool_usage").(int))
-		newMsgVpn.MaxMsgSpoolUsage = &val
+		newMsgVpn.MaxMsgSpoolUsage = val
 	}
 	if d.HasChange("max_subscription_count") {
 		val := int64(d.Get("max_subscription_count").(int))
-		newMsgVpn.MaxSubscriptionCount = &val
+		newMsgVpn.MaxSubscriptionCount = val
 	}
 	if d.HasChange("max_transacted_session_count") {
 		val := int64(d.Get("max_transacted_session_count").(int))
-		newMsgVpn.MaxTransactedSessionCount = &val
+		newMsgVpn.MaxTransactedSessionCount = val
 	}
 	if d.HasChange("max_transaction_count") {
 		val := int64(d.Get("max_transaction_count").(int))
-		newMsgVpn.MaxTransactionCount = &val
+		newMsgVpn.MaxTransactionCount = val
 	}
 	if d.HasChange("replication_enabled") {
 		val := d.Get("replication_enabled").(bool)
-		newMsgVpn.ReplicationEnabled = &val
+		newMsgVpn.ReplicationEnabled = val
 	}
 	params.Body = &newMsgVpn
 
 	log.Printf("[TRACE] msg VPN params are %+v", params)
 	log.Printf("[TRACE] msg VPN Body: %+v", params.Body)
-	_, err := client.MsgVpn.UpdateMsgVpn(params, auth)
+	_, err := client.All.UpdateMsgVpn(params, auth)
 	if err != nil {
-		sempErr := err.(*msg_vpn.UpdateMsgVpnDefault).Payload.Meta.Error
+		sempErr := err.(*all.UpdateMsgVpnDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to update message VPN %q: %v", params.MsgVpnName, formatError(sempErr))
 	}
 
@@ -273,12 +273,12 @@ func resourceMsgVpnDelete(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := msg_vpn.NewDeleteMsgVpnParams()
+	params := all.NewDeleteMsgVpnParams()
 	params.MsgVpnName = d.Id()
 
-	_, err := client.MsgVpn.DeleteMsgVpn(params, auth)
+	_, err := client.All.DeleteMsgVpn(params, auth)
 	if err != nil {
-		sempErr := err.(*msg_vpn.DeleteMsgVpnDefault).Payload.Meta.Error
+		sempErr := err.(*all.DeleteMsgVpnDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to delete message VPN %q: %v", params.MsgVpnName, formatError(sempErr))
 	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but

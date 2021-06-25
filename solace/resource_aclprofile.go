@@ -5,9 +5,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ExalDraen/semp-client/models"
+	"github.com/PatrickDelancy/semp-client/client/all"
+	"github.com/PatrickDelancy/semp-client/models"
 
-	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 )
@@ -53,6 +53,12 @@ func resourceACLProfile() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validation.StringInSlice([]string{"allow", "disallow"}, false),
 			},
+			"subscribe_sharename_default_action": {
+				Type:         schema.TypeString,
+				Description:  "The default action to take when a client using the ACL Profile subscribes to a share-name subscription in the Message VPN. Must be one of \"allow\" or \"disallow\"",
+				Optional:     true,
+				ValidateFunc: validation.StringInSlice([]string{"allow", "disallow"}, false),
+			},
 		},
 		Importer: &schema.ResourceImporter{
 			State: resourceACLProfileImport,
@@ -89,14 +95,17 @@ func resourceACLProfileCreate(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("subscribe_topic_default_action"); ok {
 		acl.SubscribeTopicDefaultAction = v.(string)
 	}
+	if v, ok := d.GetOk("subscribe_sharename_default_action"); ok {
+		acl.SubscribeShareNameDefaultAction = v.(string)
+	}
 
-	params := operations.NewCreateMsgVpnACLProfileParams()
+	params := all.NewCreateMsgVpnACLProfileParams()
 	params.MsgVpnName = vpn
 	params.Body = &acl
 
-	resp, err := client.Operations.CreateMsgVpnACLProfile(params, auth)
+	resp, err := client.All.CreateMsgVpnACLProfile(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.CreateMsgVpnACLProfileDefault).Payload.Meta.Error
+		sempErr := err.(*all.CreateMsgVpnACLProfileDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to create ACL profile %q on vpn %q: %v", name, vpn, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.ACLProfileName)
@@ -110,7 +119,7 @@ func resourceACLProfileRead(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewGetMsgVpnACLProfileParams()
+	params := all.NewGetMsgVpnACLProfileParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -120,7 +129,7 @@ func resourceACLProfileRead(d *schema.ResourceData, m interface{}) error {
 	params.ACLProfileName = d.Id()
 	params.MsgVpnName = vpn
 
-	resp, err := client.Operations.GetMsgVpnACLProfile(params, auth)
+	resp, err := client.All.GetMsgVpnACLProfile(params, auth)
 	if err != nil {
 		log.Printf("[WARN] No ACL profile found: %s", d.Id())
 		d.SetId("")
@@ -132,6 +141,7 @@ func resourceACLProfileRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("client_connection_default_action", resp.Payload.Data.ClientConnectDefaultAction)
 	d.Set("publish_topic_default_action", resp.Payload.Data.PublishTopicDefaultAction)
 	d.Set("subscribe_topic_default_action", resp.Payload.Data.SubscribeTopicDefaultAction)
+	d.Set("subscribe_sharename_default_action", resp.Payload.Data.SubscribeShareNameDefaultAction)
 
 	return nil
 }
@@ -141,7 +151,7 @@ func resourceACLProfileUpdate(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewUpdateMsgVpnACLProfileParams()
+	params := all.NewUpdateMsgVpnACLProfileParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -163,11 +173,14 @@ func resourceACLProfileUpdate(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("subscribe_topic_default_action") {
 		acl.SubscribeTopicDefaultAction = d.Get("subscribe_topic_default_action").(string)
 	}
+	if d.HasChange("subscribe_sharename_default_action") {
+		acl.SubscribeShareNameDefaultAction = d.Get("subscribe_sharename_default_action").(string)
+	}
 	params.Body = &acl
 
-	_, err = client.Operations.UpdateMsgVpnACLProfile(params, auth)
+	_, err = client.All.UpdateMsgVpnACLProfile(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.UpdateMsgVpnACLProfileDefault).Payload.Meta.Error
+		sempErr := err.(*all.UpdateMsgVpnACLProfileDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to update ACL %q: %v", params.ACLProfileName, formatError(sempErr))
 	}
 
@@ -178,7 +191,7 @@ func resourceACLProfileDelete(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewDeleteMsgVpnACLProfileParams()
+	params := all.NewDeleteMsgVpnACLProfileParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -187,9 +200,9 @@ func resourceACLProfileDelete(d *schema.ResourceData, m interface{}) error {
 	params.ACLProfileName = d.Id()
 	params.MsgVpnName = vpn
 
-	_, err = client.Operations.DeleteMsgVpnACLProfile(params, auth)
+	_, err = client.All.DeleteMsgVpnACLProfile(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.DeleteMsgVpnACLProfileDefault).Payload.Meta.Error
+		sempErr := err.(*all.DeleteMsgVpnACLProfileDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to delete ACL %q: %v", params.MsgVpnName, formatError(sempErr))
 	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but

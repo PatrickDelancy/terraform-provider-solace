@@ -3,7 +3,7 @@ package solace
 import (
 	"fmt"
 
-	"github.com/ExalDraen/semp-client/models"
+	"github.com/PatrickDelancy/semp-client/models"
 )
 
 // TerraformResourceData represents a subset of the function from schema.ResourceData

@@ -5,9 +5,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ExalDraen/semp-client/models"
+	"github.com/PatrickDelancy/semp-client/client/all"
+	"github.com/PatrickDelancy/semp-client/models"
 
-	"github.com/ExalDraen/semp-client/client/operations"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -83,26 +83,26 @@ func resourceClientUsernameCreate(d *schema.ResourceData, m interface{}) error {
 	// Only set these if they're actually set (not their default value)
 	if v, ok := d.GetOk("enabled"); ok {
 		val := v.(bool)
-		user.Enabled = &val
+		user.Enabled = val
 	}
 	if v, ok := d.GetOk("acl"); ok {
 		user.ACLProfileName = v.(string)
 	}
 	if v, ok := d.GetOk("password"); ok {
 		val := v.(string)
-		user.Password = &val
+		user.Password = val
 	}
 	if v, ok := d.GetOk("profile"); ok {
 		user.ClientProfileName = v.(string)
 	}
 
-	params := operations.NewCreateMsgVpnClientUsernameParams()
+	params := all.NewCreateMsgVpnClientUsernameParams()
 	params.MsgVpnName = vpn
 	params.Body = &user
 
-	resp, err := client.Operations.CreateMsgVpnClientUsername(params, auth)
+	resp, err := client.All.CreateMsgVpnClientUsername(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.CreateMsgVpnClientUsernameDefault).Payload.Meta.Error
+		sempErr := err.(*all.CreateMsgVpnClientUsernameDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to create Client username %q on vpn %q: %v", name, vpn, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.ClientUsername)
@@ -116,7 +116,7 @@ func resourceClientUsernameRead(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewGetMsgVpnClientUsernameParams()
+	params := all.NewGetMsgVpnClientUsernameParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -126,7 +126,7 @@ func resourceClientUsernameRead(d *schema.ResourceData, m interface{}) error {
 	params.ClientUsername = d.Id()
 	params.MsgVpnName = vpn
 
-	resp, err := client.Operations.GetMsgVpnClientUsername(params, auth)
+	resp, err := client.All.GetMsgVpnClientUsername(params, auth)
 	if err != nil {
 		log.Printf("[WARN] No Client username found: %s", d.Id())
 		d.SetId("")
@@ -148,7 +148,7 @@ func resourceClientUsernameUpdate(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewUpdateMsgVpnClientUsernameParams()
+	params := all.NewUpdateMsgVpnClientUsernameParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -163,14 +163,14 @@ func resourceClientUsernameUpdate(d *schema.ResourceData, m interface{}) error {
 	// Only include changed values; anything we don't specify does not get updated
 	if d.HasChange("enabled") {
 		val := d.Get("enabled").(bool)
-		user.Enabled = &val
+		user.Enabled = val
 	}
 	if d.HasChange("acl") {
 		user.ACLProfileName = d.Get("acl").(string)
 	}
 	if d.HasChange("password") {
 		val := d.Get("password").(string)
-		user.Password = &val
+		user.Password = val
 	}
 	if d.HasChange("profile") {
 		user.ClientProfileName = d.Get("profile").(string)
@@ -178,9 +178,9 @@ func resourceClientUsernameUpdate(d *schema.ResourceData, m interface{}) error {
 
 	params.Body = &user
 
-	_, err = client.Operations.UpdateMsgVpnClientUsername(params, auth)
+	_, err = client.All.UpdateMsgVpnClientUsername(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.UpdateMsgVpnClientUsernameDefault).Payload.Meta.Error
+		sempErr := err.(*all.UpdateMsgVpnClientUsernameDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to update Client username %q: %v", params.ClientUsername, formatError(sempErr))
 	}
 
@@ -191,7 +191,7 @@ func resourceClientUsernameDelete(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
-	params := operations.NewDeleteMsgVpnClientUsernameParams()
+	params := all.NewDeleteMsgVpnClientUsernameParams()
 
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
@@ -200,9 +200,9 @@ func resourceClientUsernameDelete(d *schema.ResourceData, m interface{}) error {
 	params.ClientUsername = d.Id()
 	params.MsgVpnName = vpn
 
-	_, err = client.Operations.DeleteMsgVpnClientUsername(params, auth)
+	_, err = client.All.DeleteMsgVpnClientUsername(params, auth)
 	if err != nil {
-		sempErr := err.(*operations.DeleteMsgVpnClientUsernameDefault).Payload.Meta.Error
+		sempErr := err.(*all.DeleteMsgVpnClientUsernameDefault).Payload.Meta.Error
 		return fmt.Errorf("[ERROR] Unable to delete Client username %q: %v", params.MsgVpnName, formatError(sempErr))
 	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but
