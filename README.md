@@ -1,8 +1,15 @@
 # terraform-provider-solace
 
-[//]: # "[![Build Status](https://travis-ci.org/PatrickDelancy/terraform-provider-solace.svg?branch=master)](https://travis-ci.org/PatrickDelancy/terraform-provider-solace)"
-[//]: # "[![Go Report Card](https://goreportcard.com/badge/github.com/PatrickDelancy/terraform-provider-solace)](https://goreportcard.com/report/github.com/PatrickDelancy/terraform-provider-solace)"
-[//]: # "[![GoDoc](https://godoc.org/github.com/PatrickDelancy/terraform-provider-solace/solace?status.svg)](https://godoc.org/github.com/PatrickDelancy/terraform-provider-solace/solace)"
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/PatrickDelancy/terraform-provider-solace)
+[![GoDoc](https://godoc.org/github.com/PatrickDelancy/terraform-provider-solace/solace?status.svg)](https://godoc.org/github.com/PatrickDelancy/terraform-provider-solace/solace)
+[![Go Report Card](https://goreportcard.com/badge/github.com/PatrickDelancy/terraform-provider-solace)](https://goreportcard.com/report/github.com/PatrickDelancy/terraform-provider-solace)
+<a href="https://codeclimate.com/github/PatrickDelancy/terraform-provider-solace/maintainability"><img src="https://api.codeclimate.com/v1/badges/e9f9e33f3a7160cc431a/maintainability" /></a>
+
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/PatrickDelancy/terraform-provider-solace)
+[![Create Release](https://github.com/PatrickDelancy/terraform-provider-solace/actions/workflows/release.yml/badge.svg)](https://github.com/PatrickDelancy/terraform-provider-solace/actions/workflows/release.yml)
+
+![GitHub](https://img.shields.io/github/license/PatrickDelancy/terraform-provider-solace)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen)](http://makeapullrequest.com)
 
 ## Table of Contents
 
