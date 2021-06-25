@@ -91,7 +91,7 @@ func resourceQueue() *schema.Resource {
 }
 
 func resourceQueueCreate(d *schema.ResourceData, m interface{}) error {
-	log.Print("[DEBUG] Creating ACL Profile ...")
+	log.Print("[DEBUG] Creating queue ...")
 
 	// Get our Solace client
 	c := m.(*Config)
@@ -151,7 +151,7 @@ func resourceQueueCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceQueueRead(d *schema.ResourceData, m interface{}) error {
-	log.Printf("[DEBUG] Reading ACL Profile %q ...", d.Id())
+	log.Printf("[DEBUG] Reading queue %q ...", d.Id())
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
@@ -167,7 +167,7 @@ func resourceQueueRead(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := client.All.GetMsgVpnQueue(params, auth)
 	if err != nil {
-		log.Printf("[WARN] No ACL profile found: %s", d.Id())
+		log.Printf("[WARN] No queue found: %s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -187,7 +187,7 @@ func resourceQueueRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceQueueUpdate(d *schema.ResourceData, m interface{}) error {
-	log.Printf("[DEBUG] Updating ACL Profile %q ...", d.Id())
+	log.Printf("[DEBUG] Updating queue %q ...", d.Id())
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
@@ -269,9 +269,9 @@ func resourceQueueImport(d *schema.ResourceData, m interface{}) ([]*schema.Resou
 		return nil, fmt.Errorf("unexpected format of ID (%q), expected MSG-VPN/QUEUE-NAME", d.Id())
 	}
 	vpn := idParts[0]
-	acl := idParts[1]
+	name := idParts[1]
 	d.Set("msg_vpn", vpn)
 
-	d.SetId(acl)
+	d.SetId(name)
 	return []*schema.ResourceData{d}, nil
 }

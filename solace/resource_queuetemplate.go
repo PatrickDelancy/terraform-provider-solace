@@ -148,7 +148,7 @@ func resourceQueueTemplateRead(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := client.All.GetMsgVpnQueueTemplate(params, auth)
 	if err != nil {
-		log.Printf("[WARN] No ACL profile found: %s", d.Id())
+		log.Printf("[WARN] No queue template found: %s", d.Id())
 		d.SetId("")
 		return nil
 	}

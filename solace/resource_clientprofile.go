@@ -81,49 +81,49 @@ func resourceClientProfileCreate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	acl := models.MsgVpnClientProfile{
+	clientProfile := models.MsgVpnClientProfile{
 		ClientProfileName: name,
 		MsgVpnName:        vpn,
 	}
 	// Only set these if they're actually set (not their default value)
 	if v, ok := d.GetOk("allow_cut_through_forwarding"); ok {
 		val := v.(bool)
-		acl.AllowCutThroughForwardingEnabled = val
+		clientProfile.AllowCutThroughForwardingEnabled = val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_endpoint_create"); ok {
 		val := v.(bool)
-		acl.AllowGuaranteedEndpointCreateEnabled = val
+		clientProfile.AllowGuaranteedEndpointCreateEnabled = val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_msg_receive"); ok {
 		val := v.(bool)
-		acl.AllowGuaranteedMsgReceiveEnabled = val
+		clientProfile.AllowGuaranteedMsgReceiveEnabled = val
 	}
 	if v, ok := d.GetOk("allow_guaranteed_msg_send"); ok {
 		val := v.(bool)
-		acl.AllowGuaranteedMsgSendEnabled = val
+		clientProfile.AllowGuaranteedMsgSendEnabled = val
 	}
 	if v, ok := d.GetOk("allow_transacted_sessions"); ok {
 		val := v.(bool)
-		acl.AllowTransactedSessionsEnabled = val
+		clientProfile.AllowTransactedSessionsEnabled = val
 	}
 
 	params := all.NewCreateMsgVpnClientProfileParams()
 	params.MsgVpnName = vpn
-	params.Body = &acl
+	params.Body = &clientProfile
 
 	resp, err := client.All.CreateMsgVpnClientProfile(params, auth)
 	if err != nil {
 		sempErr := err.(*all.CreateMsgVpnClientProfileDefault).Payload.Meta.Error
-		return fmt.Errorf("[ERROR] Unable to create Client profile %q on vpn %q: %v", name, vpn, formatError(sempErr))
+		return fmt.Errorf("[ERROR] Unable to create client profile %q on vpn %q: %v", name, vpn, formatError(sempErr))
 	}
 	d.SetId(resp.Payload.Data.ClientProfileName)
 
-	log.Printf("[DEBUG] Finished creating ACL %q on VPN %q", name, vpn)
+	log.Printf("[DEBUG] Finished creating client profile %q on VPN %q", name, vpn)
 	return resourceClientProfileRead(d, m)
 }
 
 func resourceClientProfileRead(d *schema.ResourceData, m interface{}) error {
-	log.Printf("[DEBUG] Reading Client profile %q ...", d.Id())
+	log.Printf("[DEBUG] Reading client profile %q ...", d.Id())
 	c := m.(*Config)
 	client := c.Client
 	auth := c.Auth
@@ -169,31 +169,31 @@ func resourceClientProfileUpdate(d *schema.ResourceData, m interface{}) error {
 
 	params.ClientProfileName = d.Id()
 	params.MsgVpnName = vpn
-	acl := models.MsgVpnClientProfile{}
-	acl.MsgVpnName = vpn
+	clientProfile := models.MsgVpnClientProfile{}
+	clientProfile.MsgVpnName = vpn
 
 	// Only include changed values; anything we don't specify does not get updated
 	if d.HasChange("allow_cut_through_forwarding") {
 		val := d.Get("allow_cut_through_forwarding").(bool)
-		acl.AllowCutThroughForwardingEnabled = val
+		clientProfile.AllowCutThroughForwardingEnabled = val
 	}
 	if d.HasChange("allow_guaranteed_endpoint_create") {
 		val := d.Get("allow_guaranteed_endpoint_create").(bool)
-		acl.AllowGuaranteedEndpointCreateEnabled = val
+		clientProfile.AllowGuaranteedEndpointCreateEnabled = val
 	}
 	if d.HasChange("allow_guaranteed_msg_receive") {
 		val := d.Get("allow_guaranteed_msg_receive").(bool)
-		acl.AllowGuaranteedMsgReceiveEnabled = val
+		clientProfile.AllowGuaranteedMsgReceiveEnabled = val
 	}
 	if d.HasChange("allow_guaranteed_msg_send") {
 		val := d.Get("allow_guaranteed_msg_send").(bool)
-		acl.AllowGuaranteedMsgSendEnabled = val
+		clientProfile.AllowGuaranteedMsgSendEnabled = val
 	}
 	if d.HasChange("allow_transacted_sessions") {
 		val := d.Get("allow_transacted_sessions").(bool)
-		acl.AllowTransactedSessionsEnabled = val
+		clientProfile.AllowTransactedSessionsEnabled = val
 	}
-	params.Body = &acl
+	params.Body = &clientProfile
 
 	_, err = client.All.UpdateMsgVpnClientProfile(params, auth)
 	if err != nil {
@@ -234,9 +234,9 @@ func resourceClientProfileImport(d *schema.ResourceData, m interface{}) ([]*sche
 		return nil, fmt.Errorf("unexpected format of ID (%q), expected MSG-VPN/CLIENT-PROFILE", d.Id())
 	}
 	vpn := idParts[0]
-	acl := idParts[1]
+	name := idParts[1]
 	d.Set("msg_vpn", vpn)
 
-	d.SetId(acl)
+	d.SetId(name)
 	return []*schema.ResourceData{d}, nil
 }

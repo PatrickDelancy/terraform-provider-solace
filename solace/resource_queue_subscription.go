@@ -115,7 +115,7 @@ func resourceQueueSubscriptionRead(d *schema.ResourceData, m interface{}) error 
 }
 
 // func resourceQueueSubscriptionUpdate(d *schema.ResourceData, m interface{}) error {
-// 	log.Printf("[DEBUG] Updating ACL Profile %q ...", d.Id())
+// 	log.Printf("[DEBUG] Updating queue subscription %q ...", d.Id())
 // 	c := m.(*Config)
 // 	client := c.Client
 // 	auth := c.Auth
