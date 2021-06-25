@@ -27,7 +27,3 @@ require (
 	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55 // indirect
 	google.golang.org/grpc v1.23.0 // indirect
 )
-
-replace github.com/ExalDraen/semp-client => github.com/PatrickDelancy/semp-client v0.2.0
-
-replace github.com/PatrickDelancy/semp-client => C:/source/tf/semp-client
