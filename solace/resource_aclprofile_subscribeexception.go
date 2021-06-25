@@ -26,10 +26,10 @@ func resourceACLSubscribeException() *schema.Resource {
 				ForceNew:    true,
 			},
 			"topic_syntax": {
-				Type:        schema.TypeString,
-				Description: "The syntax of the Topic for the Exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
-				Required:    true,
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Description:  "The syntax of the Topic for the Exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
+				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"smf", "mqtt"}, false),
 			},
 			"acl": {
@@ -73,9 +73,9 @@ func resourceACLSubscribeExceptionCreate(d *schema.ResourceData, m interface{}) 
 
 	SubExc := models.MsgVpnACLProfileSubscribeTopicException{
 		SubscribeTopicExceptionSyntax: syntax,
-		SubscribeTopicException: topic,
-		ACLProfileName:          acl,
-		MsgVpnName:              vpn,
+		SubscribeTopicException:       topic,
+		ACLProfileName:                acl,
+		MsgVpnName:                    vpn,
 	}
 
 	params := all.NewCreateMsgVpnACLProfileSubscribeTopicExceptionParams()

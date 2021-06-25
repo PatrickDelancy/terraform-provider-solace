@@ -26,10 +26,10 @@ func resourceACLPublishException() *schema.Resource {
 				ForceNew:    true,
 			},
 			"topic_syntax": {
-				Type:        schema.TypeString,
-				Description: "The syntax of the Topic for the Exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
-				Required:    true,
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Description:  "The syntax of the Topic for the Exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
+				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"smf", "mqtt"}, false),
 			},
 			"acl": {
@@ -72,10 +72,10 @@ func resourceACLPublishExceptionCreate(d *schema.ResourceData, m interface{}) er
 	}
 
 	PubExc := models.MsgVpnACLProfilePublishTopicException{
-		PublishTopicExceptionSyntax:	syntax,
-		PublishTopicException:			topic,
-		ACLProfileName:        			acl,
-		MsgVpnName:            			vpn,
+		PublishTopicExceptionSyntax: syntax,
+		PublishTopicException:       topic,
+		ACLProfileName:              acl,
+		MsgVpnName:                  vpn,
 	}
 
 	params := all.NewCreateMsgVpnACLProfilePublishTopicExceptionParams()

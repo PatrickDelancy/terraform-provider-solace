@@ -26,10 +26,10 @@ func resourceACLSubscribeShareNameException() *schema.Resource {
 				ForceNew:    true,
 			},
 			"topic_syntax": {
-				Type:        schema.TypeString,
-				Description: "The syntax of the subscribe share name for the exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
-				Required:    true,
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Description:  "The syntax of the subscribe share name for the exception to the default action taken. The allowed values are \"smf\" and \"mqtt\"",
+				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"smf", "mqtt"}, false),
 			},
 			"acl": {
@@ -72,10 +72,10 @@ func resourceACLSubscribeShareNameExceptionCreate(d *schema.ResourceData, m inte
 	}
 
 	SubExc := models.MsgVpnACLProfileSubscribeShareNameException{
-		SubscribeShareNameExceptionSyntax:	syntax,
-		SubscribeShareNameException:		topic,
-		ACLProfileName:          			acl,
-		MsgVpnName:              			vpn,
+		SubscribeShareNameExceptionSyntax: syntax,
+		SubscribeShareNameException:       topic,
+		ACLProfileName:                    acl,
+		MsgVpnName:                        vpn,
 	}
 
 	params := all.NewCreateMsgVpnACLProfileSubscribeShareNameExceptionParams()

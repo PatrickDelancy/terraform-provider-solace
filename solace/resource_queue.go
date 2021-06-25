@@ -34,9 +34,9 @@ func resourceQueue() *schema.Resource {
 				ForceNew:    true,
 			},
 			"access_type": {
-				Type: schema.TypeString,
-				Description: "The access type for delivering messages to consumer flows bound to the Queue. The default value is 'exclusive'. Must be one of \"exclusive\" or \"non-exclusive\"",
-				Optional:    true,
+				Type:         schema.TypeString,
+				Description:  "The access type for delivering messages to consumer flows bound to the Queue. The default value is 'exclusive'. Must be one of \"exclusive\" or \"non-exclusive\"",
+				Optional:     true,
 				ValidateFunc: validation.StringInSlice([]string{"exclusive", "non-exclusive"}, false),
 			},
 			"dead_msg_queue": {
@@ -70,9 +70,9 @@ func resourceQueue() *schema.Resource {
 				Optional:    true,
 			},
 			"permission": {
-				Type: schema.TypeString,
-				Description: "The permission level for all consumers of the Queue, excluding the owner. The default value is \"no-access\". Must be one of \"no-access\", \"read-only\", \"consume\", \"modify-topic\" or \"delete\"",
-				Optional:    true,
+				Type:         schema.TypeString,
+				Description:  "The permission level for all consumers of the Queue, excluding the owner. The default value is \"no-access\". Must be one of \"no-access\", \"read-only\", \"consume\", \"modify-topic\" or \"delete\"",
+				Optional:     true,
 				ValidateFunc: validation.StringInSlice([]string{"no-access", "read-only", "consume", "modify-topic", "delete"}, false),
 			},
 		},
@@ -98,8 +98,8 @@ func resourceQueueCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	queue := models.MsgVpnQueue{
-		QueueName: name,
-		MsgVpnName:     vpn,
+		QueueName:  name,
+		MsgVpnName: vpn,
 	}
 	// Only set these if they're actually set (not their default value)
 	if v, ok := d.GetOk("access_type"); ok {

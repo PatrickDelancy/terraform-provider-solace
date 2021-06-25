@@ -33,7 +33,7 @@ func resourceQueueSubscription() *schema.Resource {
 				ForceNew:    true,
 			},
 			"topic": {
-				Type: schema.TypeString,
+				Type:        schema.TypeString,
 				Description: "The topic of the subscription. Used as part of a unique identifier.",
 				Required:    true,
 				ForceNew:    true,
@@ -56,16 +56,16 @@ func resourceQueueSubscriptionCreate(d *schema.ResourceData, m interface{}) erro
 	// Extract config data from resource data and prepare new VPN object
 	name := d.Get("queue_name").(string)
 	topic := d.Get("topic").(string)
-	
+
 	vpn, err := getMsgVPN(d, c)
 	if err != nil {
 		return err
 	}
 
 	queue := models.MsgVpnQueueSubscription{
-		QueueName:      	name,
-		MsgVpnName:     	vpn,
-		SubscriptionTopic:	topic,
+		QueueName:         name,
+		MsgVpnName:        vpn,
+		SubscriptionTopic: topic,
 	}
 
 	params := all.NewCreateMsgVpnQueueSubscriptionParams()
@@ -95,7 +95,7 @@ func resourceQueueSubscriptionRead(d *schema.ResourceData, m interface{}) error 
 		return err
 	}
 
- 	idParts := strings.Split(d.Id(), "|")
+	idParts := strings.Split(d.Id(), "|")
 	params.QueueName = idParts[0]
 	params.SubscriptionTopic = idParts[1]
 	params.MsgVpnName = vpn
