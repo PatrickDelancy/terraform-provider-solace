@@ -53,6 +53,7 @@ func resourceClientUsername() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The Client Profile of the Client Username. The default value is \"default\".",
 				Optional:    true,
+				Default:     "default",
 			},
 		},
 		Importer: &schema.ResourceImporter{
